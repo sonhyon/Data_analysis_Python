@@ -19,4 +19,12 @@ print(sum(x)) #max()
 #3.3. 함수 꾸러미, '패키지' 이해하기
 
 #패키지 활용하기
-import seaborn #패키질 로드하기 / seaborn패키지는 그래프를 만들 때 많이 사용함
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# 데이터 생성
+var = ['a', 'b', 'c', 'a']
+
+# countplot 그리기
+sns.countplot(x=var)
+plt.show()
