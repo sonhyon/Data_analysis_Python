@@ -29,7 +29,7 @@ var = ['a', 'b', 'c', 'a']
 sns.countplot(x=var)
 plt.show()
 
-import seaborn as sns
+import seaborn as sns #약어 as 사용하기
 import matplotlib.pyplot as plt
 
 df = sns.load_dataset('titanic')
@@ -40,3 +40,16 @@ sns.countplot(data=df, x='class', hue='alive') #alive별 색 표현
 #plt.show()
 sns.countplot(data=df, y='class', hue='alive') #y축을 class로 설정
 plt.show()
+
+
+#패키지 > 모듈 > 함수
+import sklearn.metrics #sklearn 패키지의 metrics 모듈 로드하기
+sklearn.metrics.accuracy_score() #sklearn 패키지 metrics 모듈의 accuracy_score() 사용하기
+
+#sklearn 패키지의 metrics 모듈 로드하기
+from sklearn import metrics
+metrics.accuracy_score()
+
+#sklearn 패키지 metrics 모듈의 accuracy_score() 로드하기
+from sklearn.metrics import accuracy_score
+accuracy_score()
