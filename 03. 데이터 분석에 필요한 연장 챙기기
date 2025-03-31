@@ -28,3 +28,15 @@ var = ['a', 'b', 'c', 'a']
 # countplot 그리기
 sns.countplot(x=var)
 plt.show()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = sns.load_dataset('titanic')
+
+sns.countplot(data=df, x='class')
+#plt.show()
+sns.countplot(data=df, x='class', hue='alive') #alive별 색 표현
+#plt.show()
+sns.countplot(data=df, y='class', hue='alive') #y축을 class로 설정
+plt.show()
