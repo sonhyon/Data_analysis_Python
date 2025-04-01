@@ -53,3 +53,16 @@ metrics.accuracy_score()
 #sklearn 패키지 metrics 모듈의 accuracy_score() 로드하기
 from sklearn.metrics import accuracy_score
 accuracy_score()
+
+
+import pandas as pd
+
+df = pd.DataFrame({'name'   : ['김지훈', '이유진', '박동현', '김민지'], #데이터 프레임 만들기
+'english': [90,80,60,70],
+'math': [50,60,100,20]})
+
+#print(df)
+
+print(df['english'])
+print(sum(df['english']))
+print(sum(df['english'])/4)
