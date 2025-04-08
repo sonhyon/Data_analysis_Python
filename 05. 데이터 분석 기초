@@ -1,0 +1,27 @@
+import pandas as pd
+exam=pd.read_csv('C:/Users/sonhy/OneDrive/바탕 화면/코딩/Python/데이터분석/exam.csv')
+print(exam)
+
+exam.head()
+exam.head(10)
+exam.tail()
+
+exam.shape #몇 행, 몇 열로 구성된 걸 확인
+exam.info #모둔 변수의 속성을 한눈에 파악
+
+exam.describe() #요약 통계량
+exam.describe(include='all') #문자 변수 요약 통계량 함께 출력
+
+#내장 함수
+sum(var)
+max(var)
+#패키지 함수
+import pandas as pd 
+pd.read_csv('C:/Users/sonhy/OneDrive/바탕 화면/코딩/Python/데이터분석/exam.csv')
+pd.DataFrame({'x' : [1,2,3]})
+#매서드
+exam.head() 
+type(df) #변수의 자료구조 확인
+
+df.head() #매서드: 괄호가 있음 - 기술
+df.shape #어트리뷰트: 괄호가 없음 - 능력치
