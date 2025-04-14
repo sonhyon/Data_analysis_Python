@@ -25,3 +25,12 @@ type(df) #변수의 자료구조 확인
 
 df.head() #매서드: 괄호가 있음 - 기술
 df.shape #어트리뷰트: 괄호가 없음 - 능력치
+
+import pandas as pd
+df_raw = pd.DataFrame({'var1' : [1,2,1], #데이터 프레임 만들기
+                       'var2' : [2,3,2]})
+df_raw
+df_new = df_raw.copy() #복사본 만들기
+df_new
+df_new = df_new.rename(columns = {'var2' : 'v2'}) #변수명 바꾸기
+df_new
