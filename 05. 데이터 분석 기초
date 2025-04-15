@@ -34,3 +34,17 @@ df_new = df_raw.copy() #복사본 만들기
 df_new
 df_new = df_new.rename(columns = {'var2' : 'v2'}) #변수명 바꾸기
 df_new
+
+df_raw['var_sum'] = df_raw['var1'] + df_raw['var2'] #파생 변수 만들기
+df_raw
+!pip install --upgrade numpy pandas seaborn scipy matplotlib
+
+import seaborn as sns
+mpg = sns.load_dataset('mpg')  # mpg 데이터 불러오기
+mpg.head()
+mpg['total'] = (mpg['horsepower'] + mpg['weight']) / 2
+mpg.head()
+
+#기준값 정하기
+mpg['total'].describe()
+mpg['total'].plot.hist()
