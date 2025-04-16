@@ -48,3 +48,8 @@ mpg.head()
 #기준값 정하기
 mpg['total'].describe()
 mpg['total'].plot.hist()
+
+#합격 판정 변수 만들기
+mpg['test'] = np.where(mpg['total']>=20, 'pass', 'fail') #조건문
+mpg.head()
+mpg['test'].value_counts() #합격 빈도표 만들기
