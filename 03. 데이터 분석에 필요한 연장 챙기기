@@ -1,2 +1,23 @@
 x=[1,2,3]
 sum(x), max(x), min(x)
+
+패키지 : 함수가 담긴 상자가 여러 개 들어있는 큰 보따리
+
+#패키지 로드하기 : import seaborn as sns
+#패키지 함수 사용하기 : sns.countplot(x = var)
+df = sns.load_dataset('titanic') #데이터 불러오기
+sns.countplot(data = df, x = 'sex') #성별로 막대그래프 생성
+sns.countplot(data = df, x = 'class', hue = 'alive') #alive별로 색 표현
+
+모듈 : 비슷한 함수끼리 묶어져 있는 것
+패키지 > 모듈 > 함수
+
+모듈 로드하기
+1. import sklearn.metrics as met #개인적으로 이게 마음에 듦
+met.accuracy_score()
+2. from sklearn import metrics as met 
+met.accuracy_score()
+3. from sklearn.metrics import accuracy_score as accuracy
+accuracy()
+
+패키지 설치하기 : 아나콘다 프롬프트를 열어 'pip install 패키지명' 입력
