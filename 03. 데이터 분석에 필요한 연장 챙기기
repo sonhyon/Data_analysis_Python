@@ -21,3 +21,30 @@ met.accuracy_score()
 accuracy()
 
 패키지 설치하기 : 아나콘다 프롬프트를 열어 'pip install 패키지명' 입력
+
+#[데이터 프레임]
+import pandas as pd
+df = pd.DataFrame({'name' : ['김지훈', '이유진', '박동현', '김민지'],
+                  'english : [90,80,60,70],
+                  'math' : [50,60,100,20]})
+
+df['english'] #특정 변수의 값 추출
+sum(df['english']) #변수의 값으로 합계 구하기
+len(df) #데이터프레임의 행 개수 구하기
+
+#[외부 데이터 이용하기]
+#엑셀 파일 불러오기
+1. 워킹 디렉터리에 파일 삽입
+2. pd.read_excel('파일명')
+#첫 번째 행이 변수명이 아니라면?
+-> pd.read_excel('파일명', header = None) #header = None로 첫 번째 행을 변수명으로 설정
+#엑셀 파일에 시트가 여러 개 있다면?
+-> pd.read_excel('파일명', sheet_name = 'Sheet2')
+-> pd.read_excel('파일명', sheet_name = 2)
+
+#CSV 파일 불러오기
+1. 워킹 디렉터리에 파일 삽입
+2. pd.read_CSV('파일명')
+#CSV 파일로 저장하기
+df_midterm.to_csv('새로 지은 파일명.csv')
+df_midterm.to_csv('새로 지은 파일명.csv', index = False) #인덱스 번호 제외하고 저장
