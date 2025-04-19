@@ -4,7 +4,8 @@ sum(x), max(x), min(x)
 패키지 : 함수가 담긴 상자가 여러 개 들어있는 큰 보따리
 
 #패키지 로드하기 : import seaborn
-#패키지 함수 사용하기 : seaborn.countplot(x = var)
+#패키지 함수 사용하기 : 
+seaborn.countplot(x = var) #빈도 막대 그래프
 df = seaborn.load_dataset('titanic') #데이터 불러오기
 seaborn.countplot(data = df, x = 'sex') #성별로 막대그래프 생성
 seaborn.countplot(data = df, x = 'class', hue = 'alive') #alive별로 색 표현
