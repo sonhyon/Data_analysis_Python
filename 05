@@ -16,7 +16,7 @@ exam.describe(include = 'all') #문자 변수 요약 통계량 함께 출력
 3. 메서드 함수 : 변수가 지니고 있는 함수
 *예를 들어 head()는 데이터프레임에 들어있는 메서드라 리스트인 자료구조에서는 사용할 수 없다
 
-df_new = df_raw.copy #복사본 만들기
+df_new = df_raw.copy() #복사본 만들기
 df_new.rename(columns = {'var2' : 'v2'}) #var2를 v2로 수정
 
 #파생변수 만들기
