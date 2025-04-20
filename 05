@@ -18,3 +18,21 @@ exam.describe(include = 'all') #문자 변수 요약 통계량 함께 출력
 
 df_new = df_raw.copy #복사본 만들기
 df_new.rename(columns = {'var2' : 'v2'}) #var2를 v2로 수정
+
+#파생변수 만들기
+df['var_sum'] = df['var1'] + df['var2']
+
+mpg['total'].mean() #평균
+mpg['total'].describe() #요약 통계량
+mpg['total'].plot.hist() #히스토그램 만들기
+
+import numpy as np
+mpg['test'] = np.where(mpg['total'] >= 20, 'pass', 'fail') #조건문
+count_test = mpg['test'].value_counts() #빈도표 만들기
+count_test.plot.bar() #빈도 막대 그래프 출력
+count_test.plot.bar(rot = 0) #축 이름을 수평으로 만들기
+
+mpg['grade'] = np.where(mpg['total'] >= 30, 'A', #중첩 조건문
+                np.where(mpg['total'] >= 20, 'B', 'C'))
+
+count_grade = mpg['grade'].value_counts().sort_index() #알파벳순으로 막대 정렬하기
