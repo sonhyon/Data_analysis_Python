@@ -37,9 +37,9 @@ len(df) #데이터프레임의 행 개수 구하기
 #엑셀 파일 불러오기
 1. 워킹 디렉터리에 파일 삽입
 2. pd.read_excel('파일명')
-#첫 번째 행이 변수명이 아니라면?
+*첫 번째 행이 변수명이 아니라면?
 -> pd.read_excel('파일명', header = None) #header = None로 첫 번째 행을 변수명으로 설정
-#엑셀 파일에 시트가 여러 개 있다면?
+*엑셀 파일에 시트가 여러 개 있다면?
 -> pd.read_excel('파일명', sheet_name = 'Sheet2')
 -> pd.read_excel('파일명', sheet_name = 2)
 
