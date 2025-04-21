@@ -1,0 +1,28 @@
+*pandas는 데이터 전처리에 가장 많이 사용되는 패키지이다
+*pandas 함수 : query(), df[], sort_values(), groupby(), assign(), agg(), merge(), concat()
+
+#행 추출
+exam.query('nclass == 1") 
+exam.query('nclass == 1 & math > 50')
+exam.query('math >= 90 | english >= 90')
+exam.query('nclass == 1 | nclass == 3 | nclass ==5')
+exam.query('nclass in [1, 3, 5]') #한꺼번에 표현 가능
+
+*파이썬에서 사용하는 기호
+논리 연산자 : <, <=, >, >=, ==, !=, |, &, in
+산술 연산자 : +, -, *, **, /, //, %
+
+#변수 추출하기
+exam['math'] 
+exam[['nclass', 'math', 'english']] #여러 변수 추출
+exam[['math']] #데이터 프레임 유지하기
+
+#변수 제거하기
+exam.drop(columns = 'math')
+exam.drop(columns = ['math', 'english'])
+
+exam.query('nclass == 1')['english'] #1반의 영어 성적을 확인 가능
+exam.query('nclass == 1')['english'].head() #일부만 추출
+exam.query('nclass == 1') \ #가독성 있게 백슬래시 입력
+    [['english']] \
+    .head()
