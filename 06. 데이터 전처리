@@ -26,3 +26,21 @@ exam.query('nclass == 1')['english'].head() #일부만 추출
 exam.query('nclass == 1') \ #가독성 있게 백슬래시 입력
     [['english']] \
     .head()
+
+#정렬하기
+exam.sort_values('math') #오름차순
+exam.sort_values('math', ascending = False) #내림차순
+exam.sort_values(['nclass', 'math']) #여러 정렬 기준 적용
+exam.sort_values(['nclass', 'math'], ascending = [True, False])
+
+#파생변수 추가
+exam.assign(total = exam['math'] + exam['english'] + exam['science']
+exam.assign(
+    total = exam['math'] + exam['english'] + exam['science'], #여러 파생변수 추가
+    mean = (exam['math'] + exam['english'] + exam['science'])/3)
+
+exam.assign(test = np.where(exam['science'] > 60, "pass", "fail"))
+exam.assign(test = np.where(exam['science'] > 60, "pass", "fail")).sort_values('total')
+
+long_name.assign(new = lambda x: x['math'] + x['english'] + x['science']) #데이터프레임명을 반복해서 적기에 번거로우므로 약어를 사용해 코드를 간결히 표현한다
+
