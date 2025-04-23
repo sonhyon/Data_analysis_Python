@@ -44,3 +44,16 @@ exam.assign(test = np.where(exam['science'] > 60, "pass", "fail")).sort_values('
 
 long_name.assign(new = lambda x: x['math'] + x['english'] + x['science']) #데이터프레임명을 반복해서 적기에 번거로우므로 약어를 사용해 코드를 간결히 표현한다
 
+#집단별로 요약
+exam.agg(mean_math = ('math'. 'mean')) #한 변수에 대한 평균 구하기
+exam.groupby('nclass') \ 
+    .agg(mean_math = ('math', 'mean')) #집단별 요약 통계량 구하기
+exam.groupby('nclass', as_index = Fasle) \ 
+    .agg(mean_math = ('math', 'mean')) #변수를 인덱스로 바꾸지 안기
+exam.groupby('nclass') \
+    .agg(mean_math = ('math', 'mean'), #여러 요약 통계량 한 번에 구하기
+        sum_math = ('math', 'sum'),
+        median_math = ('math', 'median'),
+        n =('nclass', 'count')) 
+*agg()에 자주 사용하는 요약통계량 함수 : mean(), std(), sum(), median(), min(), max(), count()
+exam.groupby('nclass').mean() #모든 변수의 요약통계량 한 번에 구하기
