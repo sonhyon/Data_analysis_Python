@@ -57,3 +57,20 @@ exam.groupby('nclass') \
         n =('nclass', 'count')) 
 *agg()에 자주 사용하는 요약통계량 함수 : mean(), std(), sum(), median(), min(), max(), count()
 exam.groupby('nclass').mean() #모든 변수의 요약통계량 한 번에 구하기
+
+mpg.groupby(['manufacturer', 'drv']) \
+    .agg(mean_cty = ('cty', 'mean')) #cty 평균 구하기
+
+mpg.groupby('drv') \
+    .agg(n = ('drv', 'count')) #빈도수 구하기
+mpg['drv'].value_count() #더 간단하게 빈도수 구하기 / 자료 구조가 데이터프레임이 아닌 시리즈이므로 query()를 적용할 수 없다
+
+#pandas 함수 조합하기
+Q. 제조 회사별로 'suv' 자동차의 도시 및 고속도로 합산 연비 평균을 구해 내림차순으로 정렬하고, 1~5위까지 출력하기
+mpg.query('category' == 'suv') \
+    .assign(total = (mpg['hwy'] + mpg['cty']) / 2) \
+    .groupby('manufacturer') \
+    .aff(mean_tot = ('total', 'mean')) \
+    .sort_valures('mean_tot', ascending = False) \
+    .head()
+
