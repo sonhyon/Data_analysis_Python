@@ -34,7 +34,7 @@ exam.sort_values(['nclass', 'math']) #여러 정렬 기준 적용
 exam.sort_values(['nclass', 'math'], ascending = [True, False])
 
 #파생변수 추가
-exam.assign(total = exam['math'] + exam['english'] + exam['science']
+exam.assign(total = exam['math'] + exam['english'] + exam['science'])
 exam.assign(
     total = exam['math'] + exam['english'] + exam['science'], #여러 파생변수 추가
     mean = (exam['math'] + exam['english'] + exam['science'])/3)
