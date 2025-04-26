@@ -1,0 +1,9 @@
+#결측치 확인하기
+pd.isna(df)
+pd.isna(df).sum() #결측치 빈도 확인
+
+#결측치 제거하기
+df.dropna(subset = 'score') #score 열에 있는 결측치 제거
+df.dropna(subset = ['score', 'sex']) #여러 변수에 결측치 없는 데이터 추출하기
+df.dropna() #모든 변수에 결측치 없는 데이터 추출
+*pd.mean(), pd.sum(), groupby(), agg() 는 자동으로 결측치를 제거하고 값을 추출한다
