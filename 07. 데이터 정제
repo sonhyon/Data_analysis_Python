@@ -24,7 +24,7 @@ df['score'] = np.where(df['score'] > 5, np.nan, df['score'])
 #분석
 df.dropna(subset = ['sex', 'score']) \ #df.dropna()는 결측치를 제거함
   .groupby('sex') \
-  .aff(mean_score = ('score', 'mean')) 
+  .agg(mean_score = ('score', 'mean')) 
 
 #이상치 제거하기
 1. 상자 그림 살펴보기
