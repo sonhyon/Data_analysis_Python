@@ -1,0 +1,12 @@
+그래프를 쉽게 만들 수 있는 seaborn 패키지
+
+#산점도
+import seaborn as sns
+sns.scatterplot(data = mpg, x='displ', y='hwy') \
+   .set(xlim = [3,6], ylim=[10 ,30]) 
+
+#종류별로 표식 색깔 바꾸기
+sns.scatterplot(data = mpg, x='displ', y='hwy', hue='drv')
+
+*그래프 활용하기
+-그래프 설정 바꾸기, 설정 되돌리기, 설명 메시지 숨기기 등등
