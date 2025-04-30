@@ -10,3 +10,15 @@ sns.scatterplot(data = mpg, x='displ', y='hwy', hue='drv')
 
 *그래프 활용하기
 -그래프 설정 바꾸기, 설정 되돌리기, 설명 메시지 숨기기 등등
+
+#막대 그래프
+sns.barplot(data = df_mpg, x = 'drv', y = 'mean_hwy')
+
+df_mpg = df_mpg.sort_values('mean_hwy', ascending = False) #데이터 프레임 정렬하기
+sns.barplot(data = df_mpg, x ='drv', y = 'mean_hwy')
+
+mpg['drv'].unique() #unique()를 이용하면 값의 순서를 알 수 있다 / groupby()를 이용해 데이터프레임을 요약하면 값의 순서가 알파벳순으로 바뀐다
+sns.countplot(data = mpg, x = 'drv', order = ['4', 'f', 'r']) #빈도막대그래프
+
+mpg['drv'].value_counts().index #drv의 값을 빈도가 높은 순으로 출력
+sns.countplot(data = mpg, x = 'drv', order = mpg['drv'].value_counts().index) #drv 빈도 높은 순으로 막대 정렬
