@@ -22,3 +22,14 @@ sns.countplot(data = mpg, x = 'drv', order = ['4', 'f', 'r']) #빈도막대그�
 
 mpg['drv'].value_counts().index #drv의 값을 빈도가 높은 순으로 출력
 sns.countplot(data = mpg, x = 'drv', order = mpg['drv'].value_counts().index) #drv 빈도 높은 순으로 막대 정렬
+
+#선 그래프
+sns.lineplot(data = economics, x='date', y='unemploy')
+
+*x축에 연도 표시하기
+economics['date2'] = pd.to_datetime(economics['date']) #날짜 시간 타입 변수 만들기
+economics.info() #변수타입 확인
+economics[['date', 'date2']]
+economics['date2'].dt.year #연 추출
+economics['date2'].dt.month #월 추출
+economics['date2'].dt.day #일 추출
