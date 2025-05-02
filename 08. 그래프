@@ -41,3 +41,6 @@ economics['year'] = economics['date2'].dt.year
 #3. x축에 연도 표시하기
 sns.lineplot(data = economics, x='year', y='unemploy')
 sns.lineplot(data = economics, x='year', y='unemploy', errorbar=None) #신뢰구간 제거
+
+#상자그림
+sns.boxplot(data = mpg, x='drv', y='hwy')
