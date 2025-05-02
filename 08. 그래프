@@ -27,9 +27,17 @@ sns.countplot(data = mpg, x = 'drv', order = mpg['drv'].value_counts().index) #d
 sns.lineplot(data = economics, x='date', y='unemploy')
 
 *x축에 연도 표시하기
-economics['date2'] = pd.to_datetime(economics['date']) #날짜 시간 타입 변수 만들기
+#1. 날짜 시간 타입 변수 만들기
+economics['date2'] = pd.to_datetime(economics['date']) 
 economics.info() #변수타입 확인
 economics[['date', 'date2']]
 economics['date2'].dt.year #연 추출
 economics['date2'].dt.month #월 추출
 economics['date2'].dt.day #일 추출
+
+#2. 연도 변수 만들기
+economics['year'] = economics['date2'].dt.year
+
+#3. x축에 연도 표시하기
+sns.lineplot(data = economics, x='year', y='unemploy')
+sns.lineplot(data = economics, x='year', y='unemploy', errorbar=None) #신뢰구간 제거
