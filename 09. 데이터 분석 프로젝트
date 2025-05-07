@@ -54,3 +54,32 @@ sex_income = welfare.dropna(subset = 'income') \             #income 결측치 �
                     .agg(mean_income = ('income', 'mean'))   #income 평균 구하기
 
 sns.barplot(data = sex_income, x = 'sex', y = 'mean_income') #그래프 만들기
+
+
+[나이와 월급의 관계 - 몇 살 때 월급을 가장 많이 받을까?]
+#나이 변수 검토 및 전처리하기
+1. 변수 검토하기
+welfare['birth'].dtypes
+welfare['birth'].describe()
+sns.histplot(data=welfare, x='birth')
+
+2. 전처리하기
+welfare['birth'].describe()
+welfare['birth'].isna().sum()
+welfare['birth'] = np.where(welfare['birth'] == 9999, np.nan, welfare['birth'])
+welfare['birth'].isna().sum()
+
+3. 파생변수 만들기 - 나이
+welfare = welfare.assign(age = 2019 - welfare['birth'] + 1)
+welfare['age'].describe()
+sns.histplot(data = welfare, x = 'age')
+
+#나이와 월급 관계 분석하기
+1. 나이에 따른 월급 평균표 만들기
+age_income = welfare.dropna(subset = 'income') \
+                    .groupby('age') \
+                    .agg(mean_income = ('income', 'mean'))
+age_income.head()
+
+2. 그래프 만들기
+sns.lineplot(data = age_income, x = 'age', y = 'mean_income')
