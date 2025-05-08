@@ -224,6 +224,68 @@ sns.barplot(data = rel_div, x = 'religion', y = 'proportion')
 
 #연령대 및 종교 유무에 따른 이혼율 분석하기
 1. 연령대별 이혼율표 만들기
+age_div = welfare.query('marriage != "etc"') \
+                 .groupby('ageg', as_index = False)['marriage'] \
+                 .value_counts(normalize = True)
 
+welfare.query('marriage != "etc"') \
+       .groupby('ageg', as_index = False)['marriage'] \
+       .value_counts()
+
+2. 연령대별 이혼율 그래프 만들기
+age_div = age_div.query('ageg != "young" & marriage == "divorce"') \
+                 .assign(proportion = age_div['proportion'] * 100) \
+                 .round(1)
+sns.barplot(data = age_div, x = 'ageg', y ='proportion')
+
+3. 연령대 및 종교 유무에 따른 이혼율표 만들기
+age_rel_div = welfare.query('marriage != "etc" & ageg != "young"') \
+                     .groupby(['ageg', 'religion'], as_index = False)['marriage'] \
+                     .value_counts(normalize = True)
+
+4. 연령대 및 종교 유무에 따른 이혼율 그래프 만들기
+age_rel_div = age_rel_div.query('marriage == "divorce"') \ 
+                         .assign(proportion = age_rel_div['proportion'] * 100) \
+                         .round(1)
+
+sns.barplot(data = age_rel_div, x = 'ageg', y = 'proportion', hue = 'religion')
+
+
+[지역별 연령대 비율 - 어느 지역에 노년층이 많을까?]
+#지역 변수 검토 및 전처리하기
+1. 변수 검토하기
+welfare['code_region'].dtypes
+welfare['code_region'].value_counts()
+
+2. 전처리하기
+list_region = pd.DataFrame({'code_region' : [1,2,3,4,5,6,7],
+                            'region'      : ['서울', '수도권', '부산/경남/울산', '대구/경북', '대전/충남', '강원/충북', '광주/전남/전북/제주도']})
+
+welfare = welfare.merge(list_region, how = 'left', on = 'code_region')
+welfare[['code_region', 'region']].head()
+
+#지역별 연령대 비율 분석하기
+1. 지역별 연령대 비율표 만들기
+region_ageg = welfare.groupby('region', as_index = False)['ageg'] \
+                     .value_counts(normalize = True)
+
+2. 그래프 만들기
+region_ageg = region_ageg.assign(proportion = region_ageg ['proportion'] * 100) \
+                         .round(1)
+
+sns.barplot(data = region_ageg, y = 'region', x = 'proportion', hue = 'ageg')
+
+3. 누적 비율 막대 그래프 만들기
+(1) 피벗하기 : 행과 열을 회전해 표의 구성을 바꾸는 작업
+pivot_df = region_ageg[['region', 'ageg', 'proportion']].pivot(index = 'region',       
+                                                               columns = 'ageg',
+                                                               values = 'proportion')
+
+(2) 그래프 만들기
+pivot_df.plot.barh(stacked = True)
+
+(3) 막대 정렬하기
+reorder_df = pivot_df.sort_values('old')[['young', 'middle', 'old']]
+reorder_df.plot.barh(stacked = True)
                  
 
