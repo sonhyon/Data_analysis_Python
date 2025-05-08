@@ -166,3 +166,49 @@ sns.barplot(data = bottom10, y = 'job', x = 'mean_income') \ #막대 그래프 �
 [성별 직업 빈도 - 성별에 따라 어떤 직업이 가장 많을까?]
 #성별 직업 빈도 분석하기
 1. 성별 직업 빈도표 만들기
+job_male = welfare.dropna(subset = 'job') \
+                  .query('sex == "male"') \
+                  .groupby('job', as_index = False) \
+                  .agg(n = ('job', 'count')) \
+                  .sort_values('n', ascending = False) \
+                  .head(10)
+
+job_female = welfare.dropna(subset = 'job') \
+                    .query('sex == "female"') \
+                    .groupby('job', as_index = False) \
+                    .agg(n = ('job', 'count')) \
+                    .sort_values('n', ascending = False) \
+                    .head(10)
+
+2. 그래프 만들기
+sns.barplot(data = job_male, y = 'job', x = 'n').set(xlim = [0, 500])
+sns.barplot(data = job_female, y = 'job', x = 'n').set(xlim = [0, 500])
+
+
+[종교 유무에 따른 이혼율 - 종교가 있으면 이혼을 덜 할까?]
+#종교 변수 검토 및 전처리하기
+1. 변수 검토하기
+welfare['religion'].dtypes
+welfare['religion'].value_counts()
+
+2. 전처리하기
+welfare['religion'] = np.where(welfare['religion'] == 1, 'yes', 'no')
+welfare['religion'].value_counts()
+sns.countplot(data = welfare, x = 'religion')
+
+#혼인 상태 변수 검토 및 전처리하기
+1. 변수 검토하기
+welfare['marriage_type'].dtypes
+welfare['marriage_type'].value_counts()
+
+2. 파생변수 만들기 - 이혼 여부
+welfare['marriage'] = np.where(welfare['marriage_type'] == 1, 'marriage',
+                      np.where(welfare['marriage_type'] == 3, 'divorce', 'etc'))
+n_divorce = welfare.groupby('marriage', as_index = False) \
+                   .agg(n = ('marriage', 'count'))
+
+sns.barplot(data = n_divorce, x = 'marriage', y = 'n')
+
+#종교 유무에 따른 이혼율 분석하기
+
+
