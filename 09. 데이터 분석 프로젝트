@@ -83,3 +83,86 @@ age_income.head()
 
 2. 그래프 만들기
 sns.lineplot(data = age_income, x = 'age', y = 'mean_income')
+
+
+[연령대에 따른 월급 차이 - 어떤 연령대의 월급이 가장 많을까?]
+#연령대 변수 검토 및 전처리하기
+welfare['age'].head()
+welfare = welfare.assign(ageg = np.where(welfare['age'] < 30, 'young',
+                                np.where(welfare['age'] <= 59, 'middle', 'old')))
+welfare['ageg'].value_counts()
+sns.countplot(data = welfare, x = 'ageg')
+
+#연령대에 따른 월급 차이 분석하기
+1. 연령대별 월급 평균표 만들기
+ageg_income = welfare.dropna(subset = 'income') \
+                     .groupby('ageg', as_index = False) \
+                     .agg(mean_income = ('income', 'mean'))
+
+2. 그래프 만들기
+sns.barplot(data = ageg_income, x = 'ageg', y = 'mean_income')
+sns.barplot(data = ageg_income, x = 'ageg', y = 'mean_income',
+            order = ['young', 'middle', 'old'])
+
+
+[연령대 및 성별 월급 차이 - 성별 월급 차이는 연령대별로 다를까?]
+#연령대 및 성별 월급 차이 분석하기
+1. 연령대 및 성별 월급 평균표 만들기
+sex_income = \
+  welfare.dropna(subset = 'income') \
+         .groupby(['ageg', 'sex'], as_index = False) \
+         .agg(mean_income = ('income', 'mean'))
+
+2. 그래프 만들기
+sns.barplot(data = sex_income, x = 'ageg', y = 'mean_income', hue = 'sex',
+            order = ['young', 'middle', 'old'])
+
+#나이 및 성별 월급 차이 분석하기
+sex_age = welfare.dropna(subset = 'income') \
+                 .groupby(['age', 'sex'], as_index = False) \
+                 .agg(mean_income = ('income', 'mean'))
+sex_age.head()
+sns.lineplot(data = sex_age, x = 'age', y = 'mean_income', hue = 'sex')
+
+
+[직업별 월급 차이 - 어떤 직업이 월급을 가장 많이 받을까?]
+#직업 변수 검토 및 전처리하기
+1. 변수 검토하기
+welfare['code_job'].dtypes
+welfare['code_job'].value_counts() #빈도 구하기
+
+2. 전처리하기
+list_job = pd.read_excel()
+list_job.head()
+list_job.shape
+welfare = welfare.merge(list_job, how='left', on='code_job')
+welfare.dropna(subset = 'code_job')[['code_job', 'job']].head()
+
+#직업별 월급 차이 분석하기
+1. 직업별 월급 평균표 만들기
+job_income = welfare.dropna(subset = ['job', 'income']) \
+                    .groupby('job', as_index = False) \
+                    .agg(mean_income = ('income', 'mean'))
+job_income.head()
+
+3. 그래프 만들기
+(1) 월급이 많은 직업
+top10 = job_income.sort_values('mean_income', ascending = False).head(10)
+top10
+
+import matplotlib.pyplot as plt #맑은 고딕 폰트 설정
+plt.rcParams.update({'font.family' : 'Malgun Gothic'})
+
+sns.barplot(data = top10, y = 'job', x = 'mean_income')
+
+(2) 월급이 적은 직업
+bottom10 = job_income.sort_values('mean_income').head(10)
+bottom10
+
+sns.barplot(data = bottom10, y = 'job', x = 'mean_income') \ #막대 그래프 만들기
+   .set(xlim = [0, 800])
+
+
+[성별 직업 빈도 - 성별에 따라 어떤 직업이 가장 많을까?]
+#성별 직업 빈도 분석하기
+1. 성별 직업 빈도표 만들기
