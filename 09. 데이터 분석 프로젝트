@@ -210,5 +210,20 @@ n_divorce = welfare.groupby('marriage', as_index = False) \
 sns.barplot(data = n_divorce, x = 'marriage', y = 'n')
 
 #종교 유무에 따른 이혼율 분석하기
+1. 종교 유무에 따른 이혼율표 만들기
+rel_div = welfare.query('marriage != "etc"') \
+                 .groupby('religion', as_index = False)['marriage'] \
+                 .value_counts(normalize = True)
 
+2. 그래프 만들기
+rel_div = rel_div.query('marriage == "divorce"') \
+                 .assign(proportion = rel_div['proportion'] * 100) \
+                 .round(1)
+
+sns.barplot(data = rel_div, x = 'religion', y = 'proportion')
+
+#연령대 및 종교 유무에 따른 이혼율 분석하기
+1. 연령대별 이혼율표 만들기
+
+                 
 
