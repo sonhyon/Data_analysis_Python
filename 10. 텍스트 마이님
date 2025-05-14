@@ -79,3 +79,27 @@ img_wordcloud = wc.generate_from_frequencies(dic_word)
 plt.figure(figsize = (10, 10))
 plt.axis('off')
 plt.imshow(img_wordcloud)
+
+
+#워드 클라우드 모양 바꾸기
+1. mask 만들기
+import PIL
+icon = PIL.Image.open('cloud.png')
+
+import numpy as np
+img = PIL.Image.new('RGB', icon.size, (225,255,255))
+img.paste(icon, icon)
+img = np.array(img)
+
+2. 워드 클라우드 만들기
+wc = WordCloud(random_state = 1234,
+               front_path = font,
+               width = 400,
+               height = 400,
+               backgorund_color = 'white',
+               mask = img)
+
+img_wordcloud = wc.generate_from_frequencies(dic_word) #워드 클라우드 만들기
+plt.figure(figsize = (10, 10))
+plt.axis('off')
+plt.imshow(img_wordcloud)
