@@ -119,3 +119,56 @@ plt.imshow(img_wordcloud)
 plt.figure(figsize = (10, 10))
 plt.axis('off')
 plt.imshow(img_wordcloud)
+
+[기사 댓글 텍스트 마이닝]
+1. 기사 댓글 불러오기
+import pandas as pd
+df = pd.read_csv('news_comment_BTS.csv', encoding = 'UTF-8')
+df.info()
+
+2. 불필요한 문자 제거하기
+df['reply'] = df['reply'].str.replace('[^가-핳]', ' ', regex = True)
+df['reply'].head()
+
+3. 명사 추출하기
+import konlpy
+kkma = konlpy.tag.Kkma()
+
+nouns = df['reply'].apply(kkma.nouns)
+nouns
+
+4. 단어 빈도표 만들기
+nouns = nouns.explode()
+nouns
+
+df_word = pd.DataFrame({'word' : nouns})
+df_word['count'] = df_word['word'].str.len()
+df_word = df_word.query('count >= 2')
+df_word
+
+df_word = df_word.groupby('word', as_index = False) \
+                 .agg(n = ('word', 'count')) \
+                 .sort_values('n', ascending = False)
+df_word
+
+5. 단어 빈도 막대 그래프 만들기
+top20 = df_word.head(20)
+top20
+
+plt.rcParamas.update({'figure.figsize' : [6.5, 6]}) #가로 세로 크기 설정
+sns.barplot(data = top20, y = 'word', x = 'n') #막대 그래프 만들기
+
+#워드 클라우드 만들기
+dic_word = df_word.set_index('word').to_dict()['n']
+
+wc = WorldCloud(random_state = 1234,
+                font_path = font,
+                width = 400,
+                height = 400,
+                background_color = 'white',
+                mask = img)
+
+img_wordcloud = wc.generate_from_frequencies(dic_word)
+plt.figure(figsize = (10, 10))
+plt.axis('off')
+plt.imshow(img_wordcloud)
