@@ -1,0 +1,57 @@
+[시군구별 인구 단계 구분도 만들기]
+1. 시군구 경계 지도 데이터 준비하기
+import json
+geo = json.load(open('SIG.geojson', encoding = 'UTF-8'))
+
+geo['features'][0]['properties'] #행정 구역 코드 출력
+geo['features'][0]['geometry'] #위도, 경도 좌표 출력
+
+2. 시군구별 인구 데이터 준비하기
+import pandas as pd
+df_pop = pd.read_csv('Population_SIG.csv')
+df_pop.head()
+df_pop.info()
+df_pop['code'] = df_pop['code'].astype(str)
+
+3. 단계 구분도 만들기
+pip install folium
+
+(1) 배경 지도 만들기
+import folium
+folium.Map(location = [35.95, 127.7],
+           zoom_start = 8)
+
+map_sig = folim.Map(location = [35.95, 127.7],
+                    zoom_start = 8,
+                    tiles = 'cartodbpositron')
+map_sig
+
+(2) 단계 구분도 만들기
+folium.Choropleth(
+  geo_data = geo,
+  data = df_pop,
+  colums = c('code', 'pop'),
+  key_on = 'feature.properties.SIG_CD') \
+    .add_to(map_sig)
+map_sig
+
+(3) 계급 구간 정하기
+bins = list(df_pop['pop'].quantile([0, 0.2, 0.4, 0.6, 0.8, 1]))
+bins
+
+(4) 디자인 수정하기
+map_sig = folium.Map(location = [35.95, 127.7],
+                     zoom_start = 8,
+                     tiles = 'cartodbposition')
+
+folium.Choropleth(
+    geo_data = geo,
+    data = df_pop,
+    colums = ('code', 'pop'),
+    key_on = 'feature.properties.SIG_CD',
+    fill_color = 'YlGnBu',
+    fill_opacity = 1,
+    line_opacity = 0.5,
+    bins = bins) \
+      .add_to(map_sig)
+map_sig
