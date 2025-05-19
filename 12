@@ -1,0 +1,27 @@
+[인터랙티브 그래프 만들기]
+인터랙티브 그래프: 마우스 움직임에 반응하며 실시간으로 모양이 변하는 그래프
+
+#산점도 만들기
+import pandas as pd
+mgp = pd.read_csv('mpg.csv')
+
+import plotly.express as px
+px.scatter(data_frame = mpg, x = 'cty', y = 'hwy', color = 'drv')
+
+#막대 그래프 만들기
+df = mpg.groupby('category', as_index = False) \
+        .agg(n = ('category', 'count'))
+
+px.bar(data_frame = df, x = 'category', y = 'n', color = 'category')
+
+#선 그래프 만들기
+economics = pd.read_csv('economics.csv')
+px.line(data_frame = economics, x = 'date', y = 'psavert')
+
+#상자 그림 만들기
+px.box(data_frame = mpg, x = 'drv', y = 'hwy', color = 'drv')
+
+#HTML 파일로 저장하기
+fig = px.scatter(data_frame = mpg, x = 'cty', y = 'hwy')
+fig.write_html('scatter_plot.html')
+
