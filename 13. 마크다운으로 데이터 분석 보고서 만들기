@@ -1,0 +1,16 @@
+#마크다운 문서 만들기
+
+#마크다운 문법 이용하기
+
+#마크다운으로 데이터 분석 보고서 만들기
+import pandas as pd
+df = pd.read_csv('mpg.csv')
+df['drv'].value_counts()
+
+import.seaborn as sns
+sns.countplot(data = df, x = 'drv')
+
+#문서 파일로 저장하기
+- HTML 파일로 저장하기
+- PDF 파일로 저장하기
+- 워드 파일로 저장하기
