@@ -1,4 +1,4 @@
-t 검정 - 두 집단의 평균 비교하기
+[t 검정 - 두 집단의 평균 비교하기]
 #compact 자동차와 suv 자동차의 도시 연비 t검정
 import pandas as pd
 mpg = pd.read_csv('mpg.csv')
@@ -24,3 +24,65 @@ regular = mpg.query('fl == "r"')['cty']
 premium = mpg.query('fl == "p"')['cty']
 
 stats.ttest_ind(regular, premium, equal_var = True)
+
+
+[상관분석 - 두 변수의 관계 분석하기]
+#실업자 수와 개인 소비 지출의 상관관계
+1. 상관계수 구하기
+economics = pd.read_csv('economics.csv')
+economics[['unemploy', 'pce']].corr       #상관행렬 만들기
+
+2. 유의확률 구하기
+stats.pearsonr(economics['unemploy'], economics['pce'])
+
+#상관행렬 히트맵 만들기
+1. 상관행렬 만들기
+mtcars = pd.read_csv('mtcars.csv')
+mtcars.head()
+
+car_cor = mtcars.corr()       #상관행렬 만들기
+car_cor = round(car_cor, 2)
+car_cor
+
+2. 히트맵 만들기
+import matplotlib.pyplot as plt
+plt.rcParms.update({'figure.dpi'    :   '120',
+                    'figure.figsize :   [7.5, 5.5]})
+
+import seaborn as sns
+sns.heatmap(car_cor,
+            annot = True,   #상관계수 표시
+            cmap = 'RdBu')  #컬러맵
+
+3. 대각 행렬 제거하기
+(1) mask 만들기
+import numpy as np
+mask = np.zeros_like(car_cor)
+mask
+
+mask[np.triu_indices_from(mask)] = 1
+mask
+
+(2) 히트맵에 mask 적용하기
+sns.heatmap(data = car_cor,
+            annot = True,
+            cmap = 'RdBu',
+            mask = mask)
+
+(3) 빈 행과 열 제거하기
+mask_new = mask[1:, :-1]
+cor_new = car_cor.iloc[1:, :-1]
+
+sns.heatmap(data = cor_new,
+            annot = True,
+            cmap = 'RdBu',
+            mask = mask_new)
+
+sns.heatmap(data = cor_new,
+            annot = True,
+            cmap = 'RdBu',
+            mask = mask_new,
+            linewidths = .5,
+            vmax = 1,
+            vmin = -1,
+            cbar_kws = {'shrink' : .5})
