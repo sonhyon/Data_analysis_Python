@@ -1,0 +1,31 @@
+[머신러닝 모델 알아보기]
+#머신러닝 모델이란?
+- 예측 변수와 타켓 변수
+- 머신러닝 모델을 이용해 미래 예측하기
+#의사결정나무 모델
+- 의사결정나무 모델이란?
+- 의사결정나무 모델을 이용해 예측하기
+- 의사결정나무 모델이 만들어지는 원리
+1. 타겟 변수를 가장 잘 분리하는 예측 변수 선택하기
+2. 첫 번째 질문의 답변에 따라 데이터를 두 노드로 분할하기
+3. 각 노드에서 타겟 변술르 가장 잘 분리하는 예측 변수 선택하기
+4. 노드가 완벽하게 분리될 때까지 반복하기
+- 의사결정나무 모델의 특징
+
+[소득 예측 모델 만들기]
+import pandas as pd
+df = pd.read_csv('adult.csv')
+df.info()
+
+#전처리하기
+1. 타겟 변수 전처리
+df['income'].value_counts(normalize = True)
+
+import numpy as np
+df['income'] = np.where(df['income'] == '>50k', 'high', 'low')
+df['income'].value_counts(normalize = True)
+
+2. 불필요한 변수 제거하기
+df = df.drop(columns = 'fnlwgt')
+
+3. 문자 타입 변수를 숫자 타입으로 바꾸기
