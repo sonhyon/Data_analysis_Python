@@ -29,3 +29,21 @@ df['income'].value_counts(normalize = True)
 df = df.drop(columns = 'fnlwgt')
 
 3. 문자 타입 변수를 숫자 타입으로 바꾸기
+df_tmp = df[['sex']]
+df_tmp.info()
+
+df_tmp['sex'].value_counts()
+
+df_tmp = pd.get_dummies(df_tmp)
+df_tmp.info()
+
+df_tmp[['sex_Female', 'sex_Male']].head()
+
+target = df['income']
+df = df.drop(columns = 'income')
+df = pd.get_dummies(df)
+df['income'] = target
+df.info()
+
+import numpy as np
+df.info(max_cols = np.inf)
