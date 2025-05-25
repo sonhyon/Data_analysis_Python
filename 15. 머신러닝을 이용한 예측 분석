@@ -60,3 +60,15 @@ df_test.shape
 
 df_train['income'].value_counts(normalize = True)
 df_test['income'].value_counts(normalize = True)
+
+
+[의사결정나무 모델 만들기]
+#모델 설정하기
+from sklearn import tree
+clf = tree.DecisionTreeClassifier(random_state = 1234,
+                                  max_depth = 3)
+
+#모델 만들기
+train_x = df_train.drop(columns = 'income')
+train_y = df_train['income']
+model = clf.fit(x = train_x, y = train_y)
