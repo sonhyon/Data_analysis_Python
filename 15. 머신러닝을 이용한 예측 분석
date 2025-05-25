@@ -47,3 +47,16 @@ df.info()
 
 import numpy as np
 df.info(max_cols = np.inf)
+
+4. 데이터 분할하기
+from sklearn.model_selection import train_test_split
+df_train, df_test = train_test_split(df,
+                                     test_size = 0.3,
+                                     stratify =df['income'],
+                                     random_state = 1234)
+
+df_train.shape
+df_test.shape
+
+df_train['income'].value_counts(normalize = True)
+df_test['income'].value_counts(normalize = True)
