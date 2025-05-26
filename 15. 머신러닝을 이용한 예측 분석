@@ -72,3 +72,19 @@ clf = tree.DecisionTreeClassifier(random_state = 1234,
 train_x = df_train.drop(columns = 'income')
 train_y = df_train['income']
 model = clf.fit(x = train_x, y = train_y)
+
+#모델 구조 살펴보기
+import matplotlib.pyplot as plt
+plt.rcParams.update({'figure.dpi'  :  '100',
+                     'figure.figsize  : [12, 8]})
+tree.plot_tree(model);
+
+tree.plot_tree(model,
+               feature_names = list(train_x.columns),
+               class_names = ['high', 'low'],
+               proportion = True,
+               filled = True,
+               rounded = True,
+               impurity = False,
+               label = 'root',
+               fontsize = 10);
