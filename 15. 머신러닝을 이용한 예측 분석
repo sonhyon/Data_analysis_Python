@@ -88,3 +88,18 @@ tree.plot_tree(model,
                impurity = False,
                label = 'root',
                fontsize = 10);
+
+[모델을 이용해 예측하기]
+test_x = df_test.drop(columns = 'income')
+test_y = df_test['income']
+
+df_test['pred'] = model.predict(test_x)
+df_test
+
+
+[성능 평가하기]
+from sklearn.metrics import confusion_matrix
+conf_mat = confustion_matrix(y_true = df_test['income'],
+                             y_pred = df_test['pred'],
+                             labels = ['high', 'low'])
+conf_mat
