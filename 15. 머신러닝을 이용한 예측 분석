@@ -103,3 +103,11 @@ conf_mat = confustion_matrix(y_true = df_test['income'],
                              y_pred = df_test['pred'],
                              labels = ['high', 'low'])
 conf_mat
+
+plt.rcParams.update(plt.rcParamsDefault)
+
+from sklearn.metrics import ConfusionMatrixDisplay
+p = ConfusionMatrixDisplay(confusion_matrix = conf_mat,
+                           display_labels = ('high', 'low'))
+p.plot(cmap = 'Blues')
+
