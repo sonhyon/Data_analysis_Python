@@ -111,3 +111,18 @@ p = ConfusionMatrixDisplay(confusion_matrix = conf_mat,
                            display_labels = ('high', 'low'))
 p.plot(cmap = 'Blues')
 
+import sklearn.metrics as metrics
+metrics.accuracy_score(y_true = df_test['income'],
+                       y_pred = df_test['pred'])
+
+metrics.precision_score(y_true = df_test['income'],
+                        y_pred = df_test['pred'],
+                        pos_label = 'high')
+
+metrics.recall_score(y_true = df_test['income'],
+                     y_pred = df_test['pred'],
+                     pos_label = 'high')
+
+metrics.fl_score(y_true = df_test['income'],
+                 y_pred = df_test['pred'],
+                 pos_label = 'high')
