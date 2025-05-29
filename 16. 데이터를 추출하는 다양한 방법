@@ -1,0 +1,35 @@
+[조건을 충족하는 행 추출하기]
+import pandas as pd
+df_raw = pd.read_csv('exam.csv')
+df = df_raw.head(10)
+df
+
+df['nclass']
+df['nclass'] == 1
+df[df['nclass'] == 1]
+df[(df['nclass'] == 1) & (df['math'] >= 50)]
+df[(df['nclass'] == 1) | (df['english'] < 50)]
+
+[열 추출하기]
+df['id']
+df['nclass']
+df[['id', 'nclass']]
+df['id']
+df[['id']]
+
+#점(.)을 이용해 변수 추출하기
+df['math']
+df.math
+df['math'].mean()
+df.math.mean()
+
+[조건을 충족하는 행에서 열 추출하기]
+df[df['nclass'] == 1]['math']
+df[df['nclass'] == 1][['math', 'english']]
+
+#[]를 pandas 함수와 함께 사용하기
+df.groupby('nclass') \
+  .agg(math    =  ('math', 'mean'),
+       english =  ('english', 'mean'))
+
+df.groupby('nclass')[['math', 'english']].mean()
