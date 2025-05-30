@@ -33,3 +33,46 @@ df.groupby('nclass') \
        english =  ('english', 'mean'))
 
 df.groupby('nclass')[['math', 'english']].mean()
+
+
+[인덱스 활용하기]
+df = pd.DataFrame({'var1' : [1,2,3],
+                   'var2' : [4,5,6]})
+df = pd.DataFrame({'var1' : [1,2,3],
+                   'var2' : [4,5,6]},
+                    index = ['Kim', 'Lee', 'Park'])
+
+[인덱스 문자열을 지정해 행 추출하기]
+df.loc['Kim']
+df.loc[['Kim', 'Park']]
+
+[인덱스 문자열을 지정해 열 추출하기]
+df.loc['Lee', 'var1']
+df.loc[['Kim', 'Lee'], 'var2']
+df.loc[, 'var1']
+df.loc[:, 'var1']
+
+[인덱스 번호를 지정해 행 추출하기]
+df = df_raw.copy()
+df
+
+df.loc[0]
+df.loc[2]
+df.loc[[0]] #데이터 프레임으로 추출
+df.loc[[0,3,5]] #여러 행 추출하기
+df.loc[0:3]
+df.loc[7:9]
+df.loc[0:2]
+df.loc[:2]
+df.loc[5:8]
+df.loc[5:]
+df.loc[:]
+df
+
+df_label = pd.DataFrame({'var1' : [1,2,3],
+                         'var2' : [4,5,6],
+                         index = ['Kim', 'Lee', 'Park'])
+df_label
+df_label.loc[0]
+df.loc[2, :]    #인덱스 번호로 행 추출하기
+df.loc[:, 2]    #인덱스 번호로 열 추출하기
