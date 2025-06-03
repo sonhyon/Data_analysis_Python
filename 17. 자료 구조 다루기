@@ -41,3 +41,20 @@ exam.query('nclass in [1,3,5]')
 mpg.gropuby([manufacturer', 'drv']) \
    .agg(mean_cty = ('cty', 'mean'))
    
+[튜플]
+- 만들기
+x = (1,2,'a','b')
+x = 1,2,'a','b'
+
+- 추출하기
+x[0]
+x[1:3]
+
+- 튜플은 수정할 수 없다
+x.append(8)
+x.remove(3)
+x[0] = 9
+
+- 활용하기
+exam.agg(mean_math = ('math', 'mean'))
+sns.scatterplot(data = mpg, x = 'displ', y = 'hwy').set(xlim = (3, 6))
