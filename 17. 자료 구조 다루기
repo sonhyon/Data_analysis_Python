@@ -58,3 +58,36 @@ x[0] = 9
 - 활용하기
 exam.agg(mean_math = ('math', 'mean'))
 sns.scatterplot(data = mpg, x = 'displ', y = 'hwy').set(xlim = (3, 6))
+
+[딕서녀리]
+- 만들기
+x = {'name' : 'kim'}
+type(x)
+
+x = {'id' : 1, 'name' : ['kim', 'park'], 'nclass' : (1,2,3)}
+
+- 추출하기
+x['id']
+x['name']
+x['name'][0]
+x['nclass'][1]
+
+- 수정하기
+# 추가하기
+x['score'] = [5,6,7]
+
+# 삭제하기
+del(x['id'])
+del(x['name'][1])
+
+# 값 변경하기
+x['score'] = [7,8,9]
+x['score'][2] = 99
+
+# 키 변경하기
+x['math'] = x['score']
+del(x['score'])
+
+- 활용하기
+df = pd.DataFrame({'id' : [1,2,3]})
+mpg.rename(columns = {'cty' : 'city'})
