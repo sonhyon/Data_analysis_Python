@@ -91,3 +91,48 @@ del(x['score'])
 - 활용하기
 df = pd.DataFrame({'id' : [1,2,3]})
 mpg.rename(columns = {'cty' : 'city'})
+
+
+[시리즈]
+- 만들기
+import pandas as pd
+x_num = pd.Series([3,4,5])
+type(x_num)
+
+x_label = pd.Series({3,4,5], index = ['kim', 'lee', 'park'])
+x_label
+
+- 추출하기
+x_num[0]
+x_label['kim']
+x_label.loc['kim']
+x_num.iloc[0]
+
+- 수정하기
+# 추가하기
+x_num[3] = 9
+x_label['choi'] = 6
+
+# 삭제하기
+del(x_num[2])
+del(x_label['park'])
+
+# 변경하기
+x_num[3] = 4
+x_label['kim'] = 5
+
+- 활용하기
+# 데이터프레임에서 변수 추출해 활용하기
+mpg = pd.read_csv('mpg.csv')
+mpg['hwy']
+
+mpg['hwy'].mean()
+
+# pandas 함수의 출력 결과 활용하기
+n_category = mpg['category'].value_counts()
+n_category
+
+type(n_category)
+n_category[0:2]
+n_category[['suv', 'compact']]
+
