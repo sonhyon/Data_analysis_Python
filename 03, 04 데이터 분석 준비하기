@@ -1,0 +1,68 @@
+📌 기본 함수
+x = [1, 2, 3]
+
+sum(x)  # 합계
+max(x)  # 최댓값
+min(x)  # 최솟값
+
+📦 패키지와 모듈 개념
+패키지: 여러 모듈이 들어 있는 큰 보따리
+모듈: 비슷한 함수들을 모아놓은 파일
+구조: 패키지 > 모듈 > 함수
+
+📦 패키지 사용 예시 (seaborn)
+import seaborn
+
+# 데이터 불러오기
+df = seaborn.load_dataset('titanic')
+
+# 그래프 그리기
+seaborn.countplot(x='sex', data=df)  # 성별 빈도 그래프
+seaborn.countplot(x='class', hue='alive', data=df)  # 생존 여부별 클래스
+
+🧩 모듈 불러오는 방법 (sklearn.metrics)
+import sklearn.metrics as met
+met.accuracy_score()
+
+from sklearn import metrics as met
+met.accuracy_score()
+
+from sklearn.metrics import accuracy_score as accuracy
+accuracy()
+
+📥 패키지 설치 방법
+아나콘다 프롬프트 또는 터미널에서
+pip install 패키지명
+
+📊 데이터프레임 다루기 (pandas)
+import pandas as pd
+
+df = pd.DataFrame({
+    'name': ['김지훈', '이유진', '박동현', '김민지'],
+    'english': [90, 80, 60, 70],
+    'math': [50, 60, 100, 20]
+})
+
+df['english']            # 특정 열 추출
+sum(df['english'])       # 총합 계산
+len(df)                  # 행 개수
+
+📁 외부 데이터 불러오기
+📘 엑셀 파일
+# 기본
+df = pd.read_excel('파일명.xlsx')
+
+# 첫 행이 변수명이 아닐 때
+df = pd.read_excel('파일명.xlsx', header=None)
+
+# 특정 시트 불러오기
+df = pd.read_excel('파일명.xlsx', sheet_name='Sheet2')
+df = pd.read_excel('파일명.xlsx', sheet_name=2)  # 인덱스로 지정
+
+📄 CSV 파일
+# 불러오기
+df = pd.read_csv('파일명.csv')
+
+# 저장하기
+df.to_csv('저장할이름.csv')  # 인덱스 포함
+df.to_csv('저장할이름.csv', index=False)  # 인덱스 제외
