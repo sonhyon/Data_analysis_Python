@@ -1,79 +1,115 @@
-*pandas는 데이터 전처리에 가장 많이 사용되는 패키지이다
-*pandas 함수 : query(), df[], sort_values(), groupby(), assign(), agg(), merge(), concat()
+📦 pandas 개요
+pandas는 데이터 전처리에 가장 많이 사용되는 파이썬 라이브러리입니다.
 
-#행 추출
-exam.query('nclass == 1") 
-exam.query('nclass == 1 & math > 50')
-exam.query('math >= 90 | english >= 90')
-exam.query('nclass == 1 | nclass == 3 | nclass ==5')
-exam.query('nclass in [1, 3, 5]') #한꺼번에 표현 가능
+자주 사용하는 pandas 함수
+query() : 조건에 맞는 행 추출
+df[] : 변수(열) 추출
+sort_values() : 정렬
+groupby() : 집단별 통계
+assign() : 파생변수 추가
+agg() : 요약 통계
+merge() : 가로 방향 결합
+concat() : 세로 방향 결합
 
-*파이썬에서 사용하는 기호
+🧩 기본 문법
+✅ 논리/산술 연산자
 논리 연산자 : <, <=, >, >=, ==, !=, |, &, in
+
 산술 연산자 : +, -, *, **, /, //, %
 
-#변수 추출하기
-exam['math'] 
-exam[['nclass', 'math', 'english']] #여러 변수 추출
-exam[['math']] #데이터 프레임 유지하기
+🔍 행 추출 (query())
+exam.query('nclass == 1')
+exam.query('nclass == 1 & math > 50')
+exam.query('math >= 90 | english >= 90')
+exam.query('nclass in [1, 3, 5]')
 
-#변수 제거하기
-exam.drop(columns = 'math')
-exam.drop(columns = ['math', 'english'])
+📌 변수(열) 추출 및 제거
+✅ 변수 추출
+exam['math']                          # 시리즈 형태
+exam[['math']]                        # 데이터프레임 유지
+exam[['nclass', 'math', 'english']]  # 여러 열 추출
 
-exam.query('nclass == 1')['english'] #1반의 영어 성적을 확인 가능
-exam.query('nclass == 1')['english'].head() #일부만 추출
-exam.query('nclass == 1') \ #가독성 있게 백슬래시 입력
+❌ 변수 제거
+exam.drop(columns='math')
+exam.drop(columns=['math', 'english'])
+
+✅ 조건 + 열 추출
+exam.query('nclass == 1')['english']
+exam.query('nclass == 1')['english'].head()
+
+# 가독성 좋게 작성
+exam.query('nclass == 1') \
     [['english']] \
     .head()
 
-#정렬하기
-exam.sort_values('math') #오름차순
-exam.sort_values('math', ascending = False) #내림차순
-exam.sort_values(['nclass', 'math']) #여러 정렬 기준 적용
-exam.sort_values(['nclass', 'math'], ascending = [True, False])
+🔢 정렬 (sort_values())
+exam.sort_values('math')  # 오름차순
+exam.sort_values('math', ascending=False)  # 내림차순
+exam.sort_values(['nclass', 'math'])  # 여러 기준 정렬
+exam.sort_values(['nclass', 'math'], ascending=[True, False])
 
-#파생변수 추가
+➕ 파생변수 추가 (assign())
 exam.assign(total = exam['math'] + exam['english'] + exam['science'])
+
 exam.assign(
-    total = exam['math'] + exam['english'] + exam['science'], #여러 파생변수 추가
-    mean = (exam['math'] + exam['english'] + exam['science'])/3)
+    total = exam['math'] + exam['english'] + exam['science'],
+    mean = (exam['math'] + exam['english'] + exam['science']) / 3
+)
 
-exam.assign(test = np.where(exam['science'] > 60, "pass", "fail"))
-exam.assign(test = np.where(exam['science'] > 60, "pass", "fail")).sort_values('total')
+# 조건 기반 파생변수
+import numpy as np
+exam.assign(test = np.where(exam['science'] > 60, 'pass', 'fail'))
 
-long_name.assign(new = lambda x: x['math'] + x['english'] + x['science']) #데이터프레임명을 반복해서 적기에 번거로우므로 약어를 사용해 코드를 간결히 표현한다
+# assign 이후 정렬
+exam.assign(test = np.where(exam['science'] > 60, 'pass', 'fail')) \
+    .sort_values('total')
 
-#집단별로 요약
-exam.agg(mean_math = ('math'. 'mean')) #한 변수에 대한 평균 구하기
-exam.groupby('nclass') \ 
-    .agg(mean_math = ('math', 'mean')) #집단별 요약 통계량 구하기
-exam.groupby('nclass', as_index = Fasle) \ 
-    .agg(mean_math = ('math', 'mean')) #변수를 인덱스로 바꾸지 안기
-exam.groupby('nclass') \
-    .agg(mean_math = ('math', 'mean'), #여러 요약 통계량 한 번에 구하기
-        sum_math = ('math', 'sum'),
-        median_math = ('math', 'median'),
-        n =('nclass', 'count')) 
-*agg()에 자주 사용하는 요약통계량 함수 : mean(), std(), sum(), median(), min(), max(), count()
-exam.groupby('nclass').mean() #모든 변수의 요약통계량 한 번에 구하기
+# lambda로 표현 간소화
+long_name.assign(new = lambda x: x['math'] + x['english'] + x['science'])
 
-mpg.groupby(['manufacturer', 'drv']) \
-    .agg(mean_cty = ('cty', 'mean')) #cty 평균 구하기
+📊 집단별 요약 (groupby() + agg())
+# 단일 변수 평균
+exam.agg(mean_math = ('math', 'mean'))
 
-mpg.groupby('drv') \
-    .agg(n = ('drv', 'count')) #빈도수 구하기
-mpg['drv'].value_count() #더 간단하게 빈도수 구하기 / 자료 구조가 데이터프레임이 아닌 시리즈이므로 query()를 적용할 수 없다
+# 집단별 평균
+exam.groupby('nclass').agg(mean_math = ('math', 'mean'))
 
-#pandas 함수 조합하기
-Q. 제조 회사별로 'suv' 자동차의 도시 및 고속도로 합산 연비 평균을 구해 내림차순으로 정렬하고, 1~5위까지 출력하기
-mpg.query('category' == 'suv') \
-    .assign(total = (mpg['hwy'] + mpg['cty']) / 2) \ #변수 만들기
+# 인덱스 유지 X
+exam.groupby('nclass', as_index=False).agg(mean_math = ('math', 'mean'))
+
+# 여러 통계량
+exam.groupby('nclass').agg(
+    mean_math = ('math', 'mean'),
+    sum_math = ('math', 'sum'),
+    median_math = ('math', 'median'),
+    n = ('nclass', 'count')
+)
+
+# 모든 수치 변수 요약
+exam.groupby('nclass').mean()
+
+# 다중 그룹 기준
+mpg.groupby(['manufacturer', 'drv']).agg(mean_cty = ('cty', 'mean'))
+
+# 빈도수 구하기
+mpg.groupby('drv').agg(n = ('drv', 'count'))
+
+# 시리즈 빈도수 (query 사용 불가)
+mpg['drv'].value_counts()
+
+🧠 pandas 함수 조합 예제
+Q. 제조 회사별로 'suv' 자동차의 도시 및 고속도로 연비 평균을 구해 내림차순 정렬 후 상위 5개 출력하기
+mpg.query('category == "suv"') \
+    .assign(total = (mpg['hwy'] + mpg['cty']) / 2) \
     .groupby('manufacturer') \
-    .agg(mean_tot = ('total', 'mean')) \ #평균 구하기
-    .sort_valures('mean_tot', ascending = False) \ #내림차순 정렬
+    .agg(mean_tot = ('total', 'mean')) \
+    .sort_values('mean_tot', ascending=False) \
     .head()
 
-total = po.merge(test1, test2, how = 'left', on = 'id') #가로로 합치기
-group_all = pd.contact([group_a, group_b]) #세로로 합치기
-*데이터를 세로로 합칠 때는 두 데이터의 변수명이 같아야 한다. pd.rename()을 이용하기
+🔗 데이터 결합
+➡️ 가로로 결합 (merge)
+pd.merge(test1, test2, how='left', on='id')
+
+⬇️ 세로로 결합 (concat)
+pd.concat([group_a, group_b])
+세로 결합 시 열 이름이 동일해야 함. 필요 시 rename() 사용
