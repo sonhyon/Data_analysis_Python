@@ -1,88 +1,98 @@
-[t 검정 - 두 집단의 평균 비교하기]
-#compact 자동차와 suv 자동차의 도시 연비 t검정
+📘 [t 검정 – 두 집단의 평균 비교]
+✅ 예제 1: compact 자동차 vs suv 자동차의 도시 연비 비교
 import pandas as pd
+from scipy import stats
+
+# 데이터 불러오기
 mpg = pd.read_csv('mpg.csv')
 
-mpg.query('category in ["compact", "suv"]) \
-   .groupby('category', as_index = False) \
-   .agg(n    = ('category', 'count'),
-        mean = ('cty', 'mean'))
+# 그룹별 평균과 개수
+mpg.query('category in ["compact", "suv"]') \
+   .groupby('category', as_index=False) \
+   .agg(n=('category', 'count'),
+        mean=('cty', 'mean'))
 
-compact  = mpg.query('category == "compact"')['cty']
+# 각 그룹 데이터 추출
+compact = mpg.query('category == "compact"')['cty']
 suv = mpg.query('category == "suv"')['cty']
 
-from scipy import stats
-stats.ttest_ind(compact, suv, euqal_var = True)
+# t 검정
+stats.ttest_ind(compact, suv, equal_var=True)
 
-#일반 휘발유와 고급 휘발유의 도시 연비 t검정
+✅ 예제 2: 일반 휘발유(r) vs 고급 휘발유(p)의 도시 연비 비교
+# 그룹별 평균과 개수
 mpg.query('fl in ["r", "p"]') \
-   .groupby('fl', 'count'),
-   .agg(n    = ('fl', 'count'),
-        mean = ('cty', 'mean'))
+   .groupby('fl', as_index=False) \
+   .agg(n=('fl', 'count'),
+        mean=('cty', 'mean'))
 
+# 각 그룹 데이터 추출
 regular = mpg.query('fl == "r"')['cty']
 premium = mpg.query('fl == "p"')['cty']
 
-stats.ttest_ind(regular, premium, equal_var = True)
+# t 검정
+stats.ttest_ind(regular, premium, equal_var=True)
 
+📘 [상관분석 – 두 변수의 관계 분석]
+✅ 예제 1: 실업자 수와 개인 소비 지출의 상관관계
+import pandas as pd
+from scipy import stats
 
-[상관분석 - 두 변수의 관계 분석하기]
-#실업자 수와 개인 소비 지출의 상관관계
-1. 상관계수 구하기
+# 데이터 불러오기
 economics = pd.read_csv('economics.csv')
-economics[['unemploy', 'pce']].corr       #상관행렬 만들기
 
-2. 유의확률 구하기
+# 상관행렬
+economics[['unemploy', 'pce']].corr()
+
+# 상관계수 및 유의확률
 stats.pearsonr(economics['unemploy'], economics['pce'])
 
-#상관행렬 히트맵 만들기
-1. 상관행렬 만들기
-mtcars = pd.read_csv('mtcars.csv')
-mtcars.head()
-
-car_cor = mtcars.corr()       #상관행렬 만들기
-car_cor = round(car_cor, 2)
-car_cor
-
-2. 히트맵 만들기
-import matplotlib.pyplot as plt
-plt.rcParms.update({'figure.dpi'    :   '120',
-                    'figure.figsize :   [7.5, 5.5]})
-
+📘 [상관행렬 히트맵 시각화]
+✅ 예제: mtcars 데이터로 상관행렬 히트맵 그리기
+import pandas as pd
 import seaborn as sns
-sns.heatmap(car_cor,
-            annot = True,   #상관계수 표시
-            cmap = 'RdBu')  #컬러맵
-
-3. 대각 행렬 제거하기
-(1) mask 만들기
+import matplotlib.pyplot as plt
 import numpy as np
+
+# 데이터 불러오기
+mtcars = pd.read_csv('mtcars.csv')
+
+# 상관계수 행렬 계산
+car_cor = round(mtcars.corr(), 2)
+
+# 기본 히트맵
+sns.heatmap(car_cor, annot=True, cmap='RdBu')
+plt.show()
+
+✅ 대각선 제거된 히트맵
+# 마스크 생성: 상삼각행렬만 마스킹
 mask = np.zeros_like(car_cor)
-mask
+mask[np.triu_indices_from(mask)] = True
 
-mask[np.triu_indices_from(mask)] = 1
-mask
+# 히트맵 그리기
+sns.heatmap(data=car_cor,
+            annot=True,
+            cmap='RdBu',
+            mask=mask)
+plt.show()
 
-(2) 히트맵에 mask 적용하기
-sns.heatmap(data = car_cor,
-            annot = True,
-            cmap = 'RdBu',
-            mask = mask)
-
-(3) 빈 행과 열 제거하기
-mask_new = mask[1:, :-1]
+✅ 불필요한 행·열 제거 및 디자인 향상
+# 대각 제외한 하삼각 부분만 추출
 cor_new = car_cor.iloc[1:, :-1]
+mask_new = mask[1:, :-1]
 
-sns.heatmap(data = cor_new,
-            annot = True,
-            cmap = 'RdBu',
-            mask = mask_new)
+sns.heatmap(data=cor_new,
+            annot=True,
+            cmap='RdBu',
+            mask=mask_new,
+            linewidths=0.5,
+            vmax=1,
+            vmin=-1,
+            cbar_kws={'shrink': 0.5})
+plt.show()
 
-sns.heatmap(data = cor_new,
-            annot = True,
-            cmap = 'RdBu',
-            mask = mask_new,
-            linewidths = .5,
-            vmax = 1,
-            vmin = -1,
-            cbar_kws = {'shrink' : .5})
+📎 참고 사항
+equal_var=True: 두 집단의 분산이 같다고 가정한 독립표본 t 검정입니다.
+stats.ttest_ind: 이 함수는 두 표본 평균 간의 차이가 유의한지 검정합니다.
+상관계수 pearsonr()는 선형관계 정도(상관계수)와 유의확률(p-value)를 제공합니다.
+
