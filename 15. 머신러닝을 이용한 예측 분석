@@ -1,128 +1,106 @@
-[머신러닝 모델 알아보기]
-#머신러닝 모델이란?
-- 예측 변수와 타켓 변수
-- 머신러닝 모델을 이용해 미래 예측하기
-#의사결정나무 모델
-- 의사결정나무 모델이란?
-- 의사결정나무 모델을 이용해 예측하기
-- 의사결정나무 모델이 만들어지는 원리
-1. 타겟 변수를 가장 잘 분리하는 예측 변수 선택하기
-2. 첫 번째 질문의 답변에 따라 데이터를 두 노드로 분할하기
-3. 각 노드에서 타겟 변술르 가장 잘 분리하는 예측 변수 선택하기
-4. 노드가 완벽하게 분리될 때까지 반복하기
-- 의사결정나무 모델의 특징
+📘 머신러닝 모델 알아보기
+✅ 머신러닝이란?
+예측 변수 (Feature): 입력 데이터, 예: 나이, 직업, 학력 등
+타겟 변수 (Target): 예측하고자 하는 결과, 예: 소득 수준
+머신러닝 모델: 과거 데이터를 학습해 새로운 데이터를 예측하는 알고리즘
 
-[소득 예측 모델 만들기]
+🌲 의사결정나무(Decision Tree) 모델
+✅ 정의
+조건에 따라 데이터를 분할하며 분류하거나 예측하는 모델
+나무처럼 분기되는 구조로 의사결정을 시각화
+
+✅ 작동 원리
+타겟 변수를 가장 잘 분리하는 예측 변수 선택
+그 변수 기준으로 데이터를 분할
+각 노드에서 반복 분할 수행
+더 이상 나눌 수 없을 때(또는 조건 만족 시) 종료
+
+✅ 특징
+직관적이고 해석 쉬움
+과적합(overfitting) 위험 있음 → max_depth 등 하이퍼파라미터 조정 필요
+
+📊 [소득 예측 모델 만들기]
 import pandas as pd
 df = pd.read_csv('adult.csv')
 df.info()
 
-#전처리하기
-1. 타겟 변수 전처리
-df['income'].value_counts(normalize = True)
-
+✅ 1단계: 전처리
+# 타겟 변수 전처리
 import numpy as np
 df['income'] = np.where(df['income'] == '>50k', 'high', 'low')
-df['income'].value_counts(normalize = True)
 
-2. 불필요한 변수 제거하기
-df = df.drop(columns = 'fnlwgt')
+# 불필요한 열 제거
+df = df.drop(columns='fnlwgt')
 
-3. 문자 타입 변수를 숫자 타입으로 바꾸기
-df_tmp = df[['sex']]
-df_tmp.info()
-
-df_tmp['sex'].value_counts()
-
-df_tmp = pd.get_dummies(df_tmp)
-df_tmp.info()
-
-df_tmp[['sex_Female', 'sex_Male']].head()
-
+# 범주형 변수 → 더미 변수로 변환
 target = df['income']
-df = df.drop(columns = 'income')
+df = df.drop(columns='income')
 df = pd.get_dummies(df)
 df['income'] = target
-df.info()
 
-import numpy as np
-df.info(max_cols = np.inf)
+# 정보 확인
+df.info(max_cols=np.inf)
 
-4. 데이터 분할하기
+✅ 2단계: 데이터 분할
 from sklearn.model_selection import train_test_split
+
 df_train, df_test = train_test_split(df,
-                                     test_size = 0.3,
-                                     stratify =df['income'],
-                                     random_state = 1234)
+                                     test_size=0.3,
+                                     stratify=df['income'],
+                                     random_state=1234)
 
-df_train.shape
-df_test.shape
-
-df_train['income'].value_counts(normalize = True)
-df_test['income'].value_counts(normalize = True)
-
-
-[의사결정나무 모델 만들기]
-#모델 설정하기
+🌲 [의사결정나무 모델 만들기]
 from sklearn import tree
-clf = tree.DecisionTreeClassifier(random_state = 1234,
-                                  max_depth = 3)
 
-#모델 만들기
-train_x = df_train.drop(columns = 'income')
+# 모델 생성
+clf = tree.DecisionTreeClassifier(random_state=1234, max_depth=3)
+
+# 학습
+train_x = df_train.drop(columns='income')
 train_y = df_train['income']
-model = clf.fit(x = train_x, y = train_y)
+model = clf.fit(train_x, train_y)
 
-#모델 구조 살펴보기
+✅ 모델 시각화
 import matplotlib.pyplot as plt
-plt.rcParams.update({'figure.dpi'  :  '100',
-                     'figure.figsize  : [12, 8]})
-tree.plot_tree(model);
+
+plt.rcParams.update({'figure.dpi': 100, 'figure.figsize': [12, 8]})
 
 tree.plot_tree(model,
-               feature_names = list(train_x.columns),
-               class_names = ['high', 'low'],
-               proportion = True,
-               filled = True,
-               rounded = True,
-               impurity = False,
-               label = 'root',
-               fontsize = 10);
+               feature_names=list(train_x.columns),
+               class_names=['high', 'low'],
+               proportion=True,
+               filled=True,
+               rounded=True,
+               impurity=False,
+               label='root',
+               fontsize=10)
 
-[모델을 이용해 예측하기]
-test_x = df_test.drop(columns = 'income')
+🤖 [모델을 이용해 예측하기]
+test_x = df_test.drop(columns='income')
 test_y = df_test['income']
 
 df_test['pred'] = model.predict(test_x)
-df_test
 
-
-[성능 평가하기]
-from sklearn.metrics import confusion_matrix
-conf_mat = confustion_matrix(y_true = df_test['income'],
-                             y_pred = df_test['pred'],
-                             labels = ['high', 'low'])
-conf_mat
-
-plt.rcParams.update(plt.rcParamsDefault)
-
-from sklearn.metrics import ConfusionMatrixDisplay
-p = ConfusionMatrixDisplay(confusion_matrix = conf_mat,
-                           display_labels = ('high', 'low'))
-p.plot(cmap = 'Blues')
-
+📏 [성능 평가하기]
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import sklearn.metrics as metrics
-metrics.accuracy_score(y_true = df_test['income'],
-                       y_pred = df_test['pred'])
 
-metrics.precision_score(y_true = df_test['income'],
-                        y_pred = df_test['pred'],
-                        pos_label = 'high')
+# 혼동 행렬
+conf_mat = confusion_matrix(y_true=df_test['income'],
+                            y_pred=df_test['pred'],
+                            labels=['high', 'low'])
 
-metrics.recall_score(y_true = df_test['income'],
-                     y_pred = df_test['pred'],
-                     pos_label = 'high')
+# 시각화
+ConfusionMatrixDisplay(confusion_matrix=conf_mat,
+                       display_labels=['high', 'low']).plot(cmap='Blues')
 
-metrics.fl_score(y_true = df_test['income'],
-                 y_pred = df_test['pred'],
-                 pos_label = 'high')
+✅ 정확도, 정밀도, 재현율, F1-score
+# 정확도
+metrics.accuracy_score(test_y, df_test['pred'])
+# 정밀도
+metrics.precision_score(test_y, df_test['pred'], pos_label='high')
+# 재현율
+metrics.recall_score(test_y, df_test['pred'], pos_label='high')
+# F1 스코어
+metrics.f1_score(test_y, df_test['pred'], pos_label='high')
+
