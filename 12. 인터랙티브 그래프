@@ -1,27 +1,64 @@
-[인터랙티브 그래프 만들기]
-인터랙티브 그래프: 마우스 움직임에 반응하며 실시간으로 모양이 변하는 그래프
-
-#산점도 만들기
+📊 [인터랙티브 그래프 만들기 with Plotly]
+🔧 1. 데이터 준비
 import pandas as pd
-mgp = pd.read_csv('mpg.csv')
 
-import plotly.express as px
-px.scatter(data_frame = mpg, x = 'cty', y = 'hwy', color = 'drv')
+# 자동차 연비 데이터 불러오기
+mpg = pd.read_csv('mpg.csv')
 
-#막대 그래프 만들기
-df = mpg.groupby('category', as_index = False) \
-        .agg(n = ('category', 'count'))
-
-px.bar(data_frame = df, x = 'category', y = 'n', color = 'category')
-
-#선 그래프 만들기
+# 시간 경제 데이터
 economics = pd.read_csv('economics.csv')
-px.line(data_frame = economics, x = 'date', y = 'psavert')
 
-#상자 그림 만들기
-px.box(data_frame = mpg, x = 'drv', y = 'hwy', color = 'drv')
+🌐 2. 산점도 (Scatter Plot)
+import plotly.express as px
 
-#HTML 파일로 저장하기
-fig = px.scatter(data_frame = mpg, x = 'cty', y = 'hwy')
-fig.write_html('scatter_plot.html')
+# 도시 연비(cty) vs 고속도로 연비(hwy), 구동 방식(drv)별 색상
+fig_scatter = px.scatter(data_frame=mpg, 
+                         x='cty', 
+                         y='hwy', 
+                         color='drv', 
+                         title='구동 방식별 도시 및 고속도로 연비')
+
+fig_scatter.show()
+
+📊 3. 막대 그래프 (Bar Chart)
+# mpg.csv에 'category' 변수가 없다면, 예시용으로 drv 사용
+df_bar = mpg.groupby('drv', as_index=False) \
+            .agg(n=('drv', 'count'))
+
+fig_bar = px.bar(data_frame=df_bar,
+                 x='drv', 
+                 y='n', 
+                 color='drv',
+                 title='구동 방식별 자동차 수')
+
+fig_bar.show()
+
+📈 4. 선 그래프 (Line Plot)
+fig_line = px.line(data_frame=economics, 
+                   x='date', 
+                   y='psavert', 
+                   title='개인 저축률 변화 (psavert)')
+
+fig_line.show()
+
+📦 5. 상자 그림 (Box Plot)
+fig_box = px.box(data_frame=mpg, 
+                 x='drv', 
+                 y='hwy', 
+                 color='drv',
+                 title='구동 방식별 고속도로 연비 분포')
+
+fig_box.show()
+
+💾 6. HTML 파일로 저장하기
+# 예: 산점도 그래프 저장
+fig_scatter.write_html('scatter_plot.html')
+
+🧼 추가 팁
+plotly.express는 matplotlib보다 인터랙티브하고 발표/웹에 최적화되어 있습니다.
+그래프에 hover_data, size, symbol 같은 매개변수를 추가하면 훨씬 풍부한 시각화가 가능합니다.
+
+예시:
+px.scatter(mpg, x='cty', y='hwy', color='drv', 
+           hover_data=['manufacturer', 'model'])
 
