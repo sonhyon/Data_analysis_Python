@@ -1,46 +1,52 @@
-그래프를 쉽게 만들 수 있는 seaborn 패키지
-
-#산점도
+📊 seaborn 패키지를 활용한 그래프 그리기
+📌 패키지 불러오기
 import seaborn as sns
-sns.scatterplot(data = mpg, x='displ', y='hwy') \
-   .set(xlim = [3,6], ylim=[10 ,30]) 
+import pandas as pd
 
-#종류별로 표식 색깔 바꾸기
-sns.scatterplot(data = mpg, x='displ', y='hwy', hue='drv')
+🔵 1. 산점도 (scatter plot)
+기본 산점도
+sns.scatterplot(data=mpg, x='displ', y='hwy') \
+   .set(xlim=[3, 6], ylim=[10, 30])   # x, y축 범위 설정
 
-*그래프 활용하기
--그래프 설정 바꾸기, 설정 되돌리기, 설명 메시지 숨기기 등등
+색상으로 그룹 구분하기 (hue)
+sns.scatterplot(data=mpg, x='displ', y='hwy', hue='drv')  # drv 값에 따라 색상 구분
 
-#막대 그래프
-sns.barplot(data = df_mpg, x = 'drv', y = 'mean_hwy')
+🟩 2. 막대그래프 (bar plot)
+그룹별 평균 막대그래프
+sns.barplot(data=df_mpg, x='drv', y='mean_hwy')
 
-df_mpg = df_mpg.sort_values('mean_hwy', ascending = False) #데이터 프레임 정렬하기
-sns.barplot(data = df_mpg, x ='drv', y = 'mean_hwy')
+데이터 정렬 후 시각화
+df_mpg = df_mpg.sort_values('mean_hwy', ascending=False)
+sns.barplot(data=df_mpg, x='drv', y='mean_hwy')  # 높은 순 정렬
 
-mpg['drv'].unique() #unique()를 이용하면 값의 순서를 알 수 있다 / groupby()를 이용해 데이터프레임을 요약하면 값의 순서가 알파벳순으로 바뀐다
-sns.countplot(data = mpg, x = 'drv', order = ['4', 'f', 'r']) #빈도막대그래프
+📌 3. 빈도 막대그래프 (count plot)
+기본 사용
+sns.countplot(data=mpg, x='drv')
 
-mpg['drv'].value_counts().index #drv의 값을 빈도가 높은 순으로 출력
-sns.countplot(data = mpg, x = 'drv', order = mpg['drv'].value_counts().index) #drv 빈도 높은 순으로 막대 정렬
+순서 지정 (예: ['4', 'f', 'r'])
+sns.countplot(data=mpg, x='drv', order=['4', 'f', 'r'])
 
-#선 그래프
-sns.lineplot(data = economics, x='date', y='unemploy')
+빈도 순으로 정렬
+order = mpg['drv'].value_counts().index
+sns.countplot(data=mpg, x='drv', order=order)
 
-*x축에 연도 표시하기
-#1. 날짜 시간 타입 변수 만들기
-economics['date2'] = pd.to_datetime(economics['date']) 
-economics.info() #변수타입 확인
-economics[['date', 'date2']]
-economics['date2'].dt.year #연 추출
-economics['date2'].dt.month #월 추출
-economics['date2'].dt.day #일 추출
+🔷 4. 선그래프 (line plot)
+기본 선그래프
+sns.lineplot(data=economics, x='date', y='unemploy')
 
-#2. 연도 변수 만들기
-economics['year'] = economics['date2'].dt.year
+연도 추출 및 새 변수 생성
+economics['date2'] = pd.to_datetime(economics['date'])  # datetime 형 변환
+economics['year'] = economics['date2'].dt.year          # 연도 추출
 
-#3. x축에 연도 표시하기
-sns.lineplot(data = economics, x='year', y='unemploy')
-sns.lineplot(data = economics, x='year', y='unemploy', errorbar=None) #신뢰구간 제거
+연도별 선그래프 (신뢰구간 제거)
+sns.lineplot(data=economics, x='year', y='unemploy')
+sns.lineplot(data=economics, x='year', y='unemploy', errorbar=None)  # errorbar 제거
 
-#상자그림
-sns.boxplot(data = mpg, x='drv', y='hwy')
+🟨 5. 상자그림 (box plot)
+그룹별 데이터 분포 확인
+sns.boxplot(data=mpg, x='drv', y='hwy')
+
+💡 추가 팁: 그래프 설정 관련
+set()을 활용하면 x축, y축 범위 등을 조정 가능
+sns.set_style(), sns.set_palette() 등으로 스타일 변경 가능
+plt.show()를 명시하면 명확하게 그래프 출력
