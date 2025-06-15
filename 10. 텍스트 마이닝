@@ -1,174 +1,157 @@
-[대통령 연설문 텍스트 마이닝]
+📘 [대통령 연설문 텍스트 마이닝]
+1. KoNLPy 패키지 설치하기
+# 사전 설치 (터미널에서 실행)
+brew install openjdk      # macOS일 경우
+choco install openjdk     # Windows일 경우
 
-#KoNLPy 패키지 설치하기
-1. 자바 설치하기
-
-2. KoNLPy 의존성 패키지 설치하기
 pip install jpype1
-
-3. KoNLPy 설치하기
 pip install konlpy
 
-#가장 많이 사용된 단어 알아보기
-1. 연설문 불러오기
-moon = open('speech_moon.txt', encoding = 'UTF-8').read()
-moon
+2. 연설문 불러오기
+moon = open('speech_moon.txt', encoding='UTF-8').read()
+print(moon[:500])  # 앞부분 확인
 
-2. 불필요한 문자 제거하기
+3. 불필요한 문자 제거
 import re
-moon - re.sub('[^가-핳]', ' ', moon) #[^가-핳]은 한글이 아닌 모든 문자를 의미하는 정규 표현식
-moon
+moon = re.sub('[^가-힣]', ' ', moon)
+print(moon[:500])
 
-3. 명사 추출하기
-import konlpy
-hannanum = konlpy.tag.Hannanum()
+4. 명사 추출 및 단어 빈도 분석
+from konlpy.tag import Hannanum
+hannanum = Hannanum()
 nouns = hannanum.nouns(moon)
-nouns
 
 import pandas as pd
-df_word = pd.DataFrame({'word' : nouns}) #데이터 프레임으로 변환
-df_word
-
-4. 단어 빈도표 만들기
+df_word = pd.DataFrame({'word': nouns})
 df_word['count'] = df_word['word'].str.len()
-df_word
+df_word = df_word.query('count >= 2')
 
-df_word = df_word.query('count >= 2') #두 글자 이상 단어만 남기기
-df_word.sort_values('count')
+df_word = df_word.groupby('word', as_index=False) \
+                 .agg(n=('word', 'count')) \
+                 .sort_values('n', ascending=False)
+print(df_word.head())
 
-df_word = df_word.groupby('word', as_index = False) \
-                 .agg(n = ('word', 'count')) \
-                 .sort_values('n', ascending = False)
-df_word
-
-5. 단어 빈도 막대 그래프 만들기
-top20 = df_word.head(20)
-top20
-
+5. 단어 빈도 막대 그래프
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-plt.rcParams.update({'font.family' : 'Malgun Gothic',
-                     'figure.dpi'  : '120',
-                     'figure.figsize' : [6.5, 6]})
+top20 = df_word.head(20)
 
-sns.barplot(data = top20, y = 'word', x = 'n')
+plt.rcParams.update({'font.family': 'Malgun Gothic',
+                     'figure.dpi': 120,
+                     'figure.figsize': [6.5, 6]})
+sns.barplot(data=top20, y='word', x='n')
+plt.title('가장 많이 사용된 단어 TOP20')
+plt.show()
 
-
-#워드 클라우드 만들기
-1. wordcloud 패키지 설치하기
+6. 워드 클라우드 만들기
 pip install wordcloud
 
-2. 한글 폰트 설정하기
-font = 'DoHyeon-Regular.ttf'
-
-3. 단어와 빈도를 담은 딕셔너리 만들기
-dic_word = df_word.set_index('word').to_dict()['n']
-dic_word
-
-4. 워드 클라우드 만들기
 from wordcloud import WordCloud
-wc = wordCloud(random_state = 1234,
-               font_path = font,
-               width = 400,
-               height = 400,
-               background_color = 'white')
+
+font = 'DoHyeon-Regular.ttf'  # 한글 폰트 경로
+dic_word = df_word.set_index('word').to_dict()['n']
+
+wc = WordCloud(random_state=1234,
+               font_path=font,
+               width=400,
+               height=400,
+               background_color='white')
 
 img_wordcloud = wc.generate_from_frequencies(dic_word)
 
-plt.figure(figsize = (10, 10))
+plt.figure(figsize=(10, 10))
 plt.axis('off')
 plt.imshow(img_wordcloud)
+plt.show()
 
-
-#워드 클라우드 모양 바꾸기
-1. mask 만들기
-import PIL
-icon = PIL.Image.open('cloud.png')
-
+7. 워드 클라우드 모양 바꾸기
+from PIL import Image
 import numpy as np
-img = PIL.Image.new('RGB', icon.size, (225,255,255))
+
+icon = Image.open('cloud.png')  # 마스크 이미지
+img = Image.new('RGB', icon.size, (255, 255, 255))
 img.paste(icon, icon)
 img = np.array(img)
 
-2. 워드 클라우드 만들기
-wc = WordCloud(random_state = 1234,
-               front_path = font,
-               width = 400,
-               height = 400,
-               backgorund_color = 'white',
-               mask = img)
+wc = WordCloud(random_state=1234,
+               font_path=font,
+               width=400,
+               height=400,
+               background_color='white',
+               mask=img)
 
-img_wordcloud = wc.generate_from_frequencies(dic_word) #워드 클라우드 만들기
+img_wordcloud = wc.generate_from_frequencies(dic_word)
 
-
-#워드 클라우드 색깔 바꾸기
-wc = WordCloud(random_state = 1234,
-               font_path = font,
-               width = 400,
-               height = 400,
-               background_color = 'white',
-               mask = img,
-               colormap = 'inferno')
-
-img_wordcloud = wc.generate_from_frequencies(dic_word) #워드 클라우드 만들기
-
-plt.figure(figsize = (10, 10))
+plt.figure(figsize=(10, 10))
 plt.axis('off')
 plt.imshow(img_wordcloud)
-plt.figure(figsize = (10, 10))
+plt.show()
+
+8. 워드 클라우드 색상 변경
+wc = WordCloud(random_state=1234,
+               font_path=font,
+               width=400,
+               height=400,
+               background_color='white',
+               mask=img,
+               colormap='inferno')
+
+img_wordcloud = wc.generate_from_frequencies(dic_word)
+
+plt.figure(figsize=(10, 10))
 plt.axis('off')
 plt.imshow(img_wordcloud)
+plt.show()
 
-[기사 댓글 텍스트 마이닝]
+🗞 [기사 댓글 텍스트 마이닝]
 1. 기사 댓글 불러오기
-import pandas as pd
-df = pd.read_csv('news_comment_BTS.csv', encoding = 'UTF-8')
+df = pd.read_csv('news_comment_BTS.csv', encoding='UTF-8')
 df.info()
 
-2. 불필요한 문자 제거하기
-df['reply'] = df['reply'].str.replace('[^가-핳]', ' ', regex = True)
+2. 불필요한 문자 제거
+df['reply'] = df['reply'].str.replace('[^가-힣]', ' ', regex=True)
 df['reply'].head()
 
-3. 명사 추출하기
-import konlpy
-kkma = konlpy.tag.Kkma()
+3. 명사 추출
+from konlpy.tag import Kkma
+kkma = Kkma()
 
 nouns = df['reply'].apply(kkma.nouns)
-nouns
 
 4. 단어 빈도표 만들기
 nouns = nouns.explode()
-nouns
 
-df_word = pd.DataFrame({'word' : nouns})
+df_word = pd.DataFrame({'word': nouns})
 df_word['count'] = df_word['word'].str.len()
 df_word = df_word.query('count >= 2')
-df_word
 
-df_word = df_word.groupby('word', as_index = False) \
-                 .agg(n = ('word', 'count')) \
-                 .sort_values('n', ascending = False)
-df_word
+df_word = df_word.groupby('word', as_index=False) \
+                 .agg(n=('word', 'count')) \
+                 .sort_values('n', ascending=False)
 
-5. 단어 빈도 막대 그래프 만들기
+5. 단어 빈도 막대 그래프
 top20 = df_word.head(20)
-top20
 
-plt.rcParamas.update({'figure.figsize' : [6.5, 6]}) #가로 세로 크기 설정
-sns.barplot(data = top20, y = 'word', x = 'n') #막대 그래프 만들기
+plt.rcParams.update({'font.family': 'Malgun Gothic',
+                     'figure.figsize': [6.5, 6]})
+sns.barplot(data=top20, y='word', x='n')
+plt.title('기사 댓글 단어 빈도 TOP20')
+plt.show()
 
-#워드 클라우드 만들기
+6. 워드 클라우드 만들기
 dic_word = df_word.set_index('word').to_dict()['n']
 
-wc = WorldCloud(random_state = 1234,
-                font_path = font,
-                width = 400,
-                height = 400,
-                background_color = 'white',
-                mask = img)
+wc = WordCloud(random_state=1234,
+               font_path=font,
+               width=400,
+               height=400,
+               background_color='white',
+               mask=img)
 
 img_wordcloud = wc.generate_from_frequencies(dic_word)
-plt.figure(figsize = (10, 10))
+
+plt.figure(figsize=(10, 10))
 plt.axis('off')
 plt.imshow(img_wordcloud)
+plt.show()
