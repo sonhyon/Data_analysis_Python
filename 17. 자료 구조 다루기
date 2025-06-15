@@ -1,164 +1,126 @@
-[자료구조란?]
-import pandas as pd
-df = pd.DataFrame([1,2,3])
-df.mean()
+1. 자료구조란?
+데이터 저장 및 조작을 위한 구조
 
-x = [1,2,3]
-x.mean()
+예: 리스트, 튜플, 딕셔너리, 시리즈, 데이터프레임 등
 
-sum(x)/len(x)
 
-df_x = pd.DataFrame(x)
-df_x
-df_x.mean()
+2. 기본 데이터 타입 (스칼라)
+int (정수), float (실수), str (문자열)
 
-[스칼라]
-int, float, str
-
-- 타입 바꾸기
+타입 변환 함수
 int()
 float()
 complex()
 str()
 bool()
-pd.to_datetime()
+pd.to_datetime()  # 판다스 날짜형 변환
 
-[리스트]
-- 만들기
-x = [1,2,'a','b']
 
-- 추출하기
-x[0]
-x[1:3]
+3. 리스트 (list)
+만들기
+x = [1, 2, 'a', 'b']
 
-- 수정하기
-x.append(8) #추가하기
-x.remove(2) #삭제하기
-x[0] = 9    #변경하기
+요소 추출
+x[0]      # 첫번째 요소
+x[1:3]    # 슬라이싱 (1~2번째 요소)
 
-- 활용하기
+수정
+x.append(8)   # 추가
+x.remove(2)   # 특정값 삭제
+x[0] = 9      # 값 변경
+
+활용 예
 exam.query('nclass in [1,3,5]')
-mpg.gropuby([manufacturer', 'drv']) \
-   .agg(mean_cty = ('cty', 'mean'))
-   
-[튜플]
-- 만들기
-x = (1,2,'a','b')
-x = 1,2,'a','b'
+mpg.groupby(['manufacturer', 'drv']).agg(mean_cty=('cty', 'mean'))
 
-- 추출하기
+4. 튜플 (tuple)
+만들기
+x = (1, 2, 'a', 'b')
+x = 1, 2, 'a', 'b'  # 괄호 생략 가능
+
+추출
 x[0]
 x[1:3]
 
-- 튜플은 수정할 수 없다
-x.append(8)
-x.remove(3)
-x[0] = 9
+특징
+수정 불가 (immutable)
+x.append(8)  # 오류
+x[0] = 9     # 오류
 
-- 활용하기
-exam.agg(mean_math = ('math', 'mean'))
-sns.scatterplot(data = mpg, x = 'displ', y = 'hwy').set(xlim = (3, 6))
+활용 예
+exam.agg(mean_math=('math', 'mean'))
+sns.scatterplot(data=mpg, x='displ', y='hwy').set(xlim=(3,6))
 
-[딕서녀리]
-- 만들기
-x = {'name' : 'kim'}
-type(x)
+5. 딕셔너리 (dictionary)
+만들기
+x = {'name': 'kim'}
+x = {'id': 1, 'name': ['kim', 'park'], 'nclass': (1, 2, 3)}
 
-x = {'id' : 1, 'name' : ['kim', 'park'], 'nclass' : (1,2,3)}
-
-- 추출하기
+값 추출
 x['id']
-x['name']
 x['name'][0]
 x['nclass'][1]
 
-- 수정하기
-# 추가하기
-x['score'] = [5,6,7]
-
-# 삭제하기
-del(x['id'])
-del(x['name'][1])
-
-# 값 변경하기
-x['score'] = [7,8,9]
-x['score'][2] = 99
-
-# 키 변경하기
+수정
+x['score'] = [5, 6, 7]  # 추가
+del x['id']             # 삭제
+x['score'] = [7, 8, 9]  # 값 변경
+x['score'][2] = 99      # 리스트 내 값 변경
+# 키 변경
 x['math'] = x['score']
-del(x['score'])
+del x['score']
 
-- 활용하기
-df = pd.DataFrame({'id' : [1,2,3]})
-mpg.rename(columns = {'cty' : 'city'})
+활용
+df = pd.DataFrame({'id': [1, 2, 3]})
+mpg.rename(columns={'cty': 'city'})
 
-
-[시리즈]
-- 만들기
+6. 시리즈 (pandas Series)
+만들기
 import pandas as pd
-x_num = pd.Series([3,4,5])
-type(x_num)
+x_num = pd.Series([3, 4, 5])
+x_label = pd.Series([3,4,5], index=['kim', 'lee', 'park'])
 
-x_label = pd.Series({3,4,5], index = ['kim', 'lee', 'park'])
-x_label
-
-- 추출하기
+추출
 x_num[0]
 x_label['kim']
 x_label.loc['kim']
 x_num.iloc[0]
 
-- 수정하기
-# 추가하기
-x_num[3] = 9
-x_label['choi'] = 6
+수정
+x_num[3] = 9          # 추가
+x_label['choi'] = 6   # 추가
+del x_num[2]          # 삭제
+del x_label['park']   # 삭제
+x_num[3] = 4          # 변경
+x_label['kim'] = 5    # 변경
 
-# 삭제하기
-del(x_num[2])
-del(x_label['park'])
-
-# 변경하기
-x_num[3] = 4
-x_label['kim'] = 5
-
-- 활용하기
-# 데이터프레임에서 변수 추출해 활용하기
+활용
 mpg = pd.read_csv('mpg.csv')
-mpg['hwy']
-
 mpg['hwy'].mean()
 
-# pandas 함수의 출력 결과 활용하기
 n_category = mpg['category'].value_counts()
-n_category
-
-type(n_category)
 n_category[0:2]
 n_category[['suv', 'compact']]
 
+7. 데이터프레임 (pandas DataFrame)
+만들기
+df = pd.DataFrame({'var1': [1, 2, 3],
+                   'var2': [4, 5, 6]})
 
-[데이터 프레임]
-- 만들기
-import pandas as pd
-df = pd.DataFrame({'var1' : [1,2,3],
-                   'var2' : [4,5,6]})
-type(df)
+df = pd.DataFrame({'var1': [1,2,3],
+                   'var2': [4,5,6]},
+                   index=['kim', 'lee', 'park'])
 
-df = pd.DataFrame({'var1' : [1,2,3],
-                   'var2' : [4,5,6]},
-                   index = ['kim' ,'lee', 'park'])
-df
+컬럼 추출
+x = df['var1']
+type(x)  # pandas Series
 
-x = df['var'1']
-type(x)
-
-- 자료 구조 바꾸기
+자료구조 변환 및 함수 활용
 x = [1,1,2,3]
-x.mean()
-x.value_counts()
+sum(x)/len(x)  # 리스트 평균
+pd.Series(x).mean()
+pd.Series(x).value_counts()
 
-df_x = pd.DataFrame(x_
-type(x)
+df_x = pd.DataFrame(x)
 df_x.mean()
 df_x.value_counts()
-
