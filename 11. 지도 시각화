@@ -1,102 +1,112 @@
-[시군구별 인구 단계 구분도 만들기]
+🗺️ [시군구별 인구 단계 구분도 만들기]
 1. 시군구 경계 지도 데이터 준비하기
 import json
-geo = json.load(open('SIG.geojson', encoding = 'UTF-8'))
 
-geo['features'][0]['properties'] #행정 구역 코드 출력
-geo['features'][0]['geometry'] #위도, 경도 좌표 출력
+geo = json.load(open('SIG.geojson', encoding='UTF-8'))
+
+# 확인용
+geo['features'][0]['properties']  # 행정구역 코드
+geo['features'][0]['geometry']   # 위도, 경도
 
 2. 시군구별 인구 데이터 준비하기
 import pandas as pd
+
 df_pop = pd.read_csv('Population_SIG.csv')
-df_pop.head()
 df_pop.info()
+
+# 코드 문자열로 변환
 df_pop['code'] = df_pop['code'].astype(str)
 
 3. 단계 구분도 만들기
+(1) folium 설치
 pip install folium
 
-(1) 배경 지도 만들기
+(2) 기본 배경 지도 만들기
 import folium
-folium.Map(location = [35.95, 127.7],
-           zoom_start = 8)
 
-map_sig = folim.Map(location = [35.95, 127.7],
-                    zoom_start = 8,
-                    tiles = 'cartodbpositron')
+map_sig = folium.Map(location=[35.95, 127.7],
+                     zoom_start=8,
+                     tiles='cartodbpositron')
 map_sig
 
-(2) 단계 구분도 만들기
+(3) Choropleth 그리기 - 기본
 folium.Choropleth(
-  geo_data = geo,
-  data = df_pop,
-  colums = c('code', 'pop'),
-  key_on = 'feature.properties.SIG_CD') \
-    .add_to(map_sig)
+    geo_data=geo,
+    data=df_pop,
+    columns=('code', 'pop'),  # 오타: colums → columns
+    key_on='feature.properties.SIG_CD'
+).add_to(map_sig)
 map_sig
 
-(3) 계급 구간 정하기
+4. 계급 구간과 디자인 설정
+# 분위수 기준으로 구간 나누기
 bins = list(df_pop['pop'].quantile([0, 0.2, 0.4, 0.6, 0.8, 1]))
-bins
+print(bins)
 
-(4) 디자인 수정하기
-map_sig = folium.Map(location = [35.95, 127.7],
-                     zoom_start = 8,
-                     tiles = 'cartodbposition')
+5. 색상 등 스타일 지정
+map_sig = folium.Map(location=[35.95, 127.7],
+                     zoom_start=8,
+                     tiles='cartodbpositron')  # 오타: cartodbposition → cartodbpositron
 
 folium.Choropleth(
-    geo_data = geo,
-    data = df_pop,
-    colums = ('code', 'pop'),
-    key_on = 'feature.properties.SIG_CD',
-    fill_color = 'YlGnBu',
-    fill_opacity = 1,
-    line_opacity = 0.5,
-    bins = bins) \
-      .add_to(map_sig)
+    geo_data=geo,
+    data=df_pop,
+    columns=('code', 'pop'),
+    key_on='feature.properties.SIG_CD',
+    fill_color='YlGnBu',
+    fill_opacity=1,
+    line_opacity=0.5,
+    bins=bins
+).add_to(map_sig)
+
 map_sig
 
 
-[서울시 동별 외국인 인구 단계 구분도 만들기]
-1. 서울시 동 경계 지도 데이터 준비하기
-import json
-geo_seoul = json.load(open('EMD_Seoul.geojson', encoding = UTF-8'))
-geo_seoul['features'][0]['properties'] #행정 구역 코드 출력
-geo_seoul['features'][0]['geometry'] #위도, 경도 좌표 출력
+🌏 [서울시 동별 외국인 인구 단계 구분도 만들기]
+1. 서울시 동 경계 지도 데이터 준비
+geo_seoul = json.load(open('EMD_Seoul.geojson', encoding='UTF-8'))
 
-2. 서울시 동별 외국인 인구 데이터 준비하기
-foreigner = pd.read_csv('Foreigner_EMD_Seould.csv')
-foreigner.head()
+# 확인
+geo_seoul['features'][0]['properties']
+geo_seoul['features'][0]['geometry']
 
+2. 외국인 인구 데이터 준비
+foreigner = pd.read_csv('Foreigner_EMD_Seoul.csv')  # 오타: Seould → Seoul
 foreigner.info()
 
+# 코드 문자열로 변환
 foreigner['code'] = foreigner['code'].astype(str)
 
-3. 단계 구분도 만들기
+3. 단계 구분도 그리기
+# 분위수 기준 구간
 bins = list(foreigner['pop'].quantile([0, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]))
-bins
+print(bins)
 
-map_seoul = folium.Map(location = [37.56, 127],
-                       zoom_start = 12,
-                       tiles = 'cartodbpositron')
+map_seoul = folium.Map(location=[37.56, 127.0],
+                       zoom_start=12,
+                       tiles='cartodbpositron')
 
 folium.Choropleth(
-           geo_data = geo_seoul,
-           data = foreigner,
-           colums = ('code', 'pop'),
-           key_on = 'feature.properties.ADM_DR_CD',
-           fill_opacity = 1,
-           line_opacity = 0.5
-           bins = bins) \
-                      .add_to(map_seoul)
+    geo_data=geo_seoul,
+    data=foreigner,
+    columns=('code', 'pop'),  # 오타: colums → columns
+    key_on='feature.properties.ADM_DR_CD',
+    fill_color='YlOrRd',
+    fill_opacity=1,
+    line_opacity=0.5,
+    bins=bins
+).add_to(map_seoul)
+
 map_seoul
 
 4. 구 경계선 추가하기
-geo_seoul_sig = json.load(open('SIG_Seoul.geojson', encoding = 'UTF-8'))
+geo_seoul_sig = json.load(open('SIG_Seoul.geojson', encoding='UTF-8'))
 
-folium.Choropleth(geo_data = geo_seoul_sig,
-                  fill_opacity = 0,
-                  line_weight = 4) \
-           .add_to(map_seoul)
+folium.Choropleth(
+    geo_data=geo_seoul_sig,
+    fill_opacity=0,  # 내부 색 없음
+    line_weight=4,   # 경계선 굵기
+    line_color='black'  # 경계선 색상 추가하면 가독성 향상
+).add_to(map_seoul)
+
 map_seoul
-
