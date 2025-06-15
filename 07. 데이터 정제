@@ -1,48 +1,49 @@
-#결측치 확인하기
-pd.isna(df)
-pd.isna(df).sum() #결측치 빈도 확인
+✅ 결측치 다루기
+1. 결측치 확인
+pd.isna(df)           # 결측치 여부를 True/False로 표시
+pd.isna(df).sum()     # 변수별 결측치 개수 확인
 
-#결측치 제거하기
-df.dropna(subset = 'score') #score 열에 있는 결측치 제거
-df.dropna(subset = ['score', 'sex']) #여러 변수에 결측치 없는 데이터 추출하기
-df.dropna() #모든 변수에 결측치 없는 데이터 추출
-*pd.mean(), pd.sum(), groupby(), agg() 는 자동으로 결측치를 제거하고 값을 추출한다
+2. 결측치 제거
+df.dropna(subset='score')                  # 'score' 변수에 결측치가 있는 행 제거
+df.dropna(subset=['score', 'sex'])         # 여러 변수에 대해 결측치가 있는 행 제거
+df.dropna()                                # 모든 변수에 결측치가 없는 행만 추출
 
-#결측치 대체하기
-exma.loc[[2,7,14], ['math']] = np.nan #loc[]는 행이나 열의 이름으로 데이터를 조회 및 수정할 때 사용 / NaN를 할당
-exam['math'] = exam['math'].fillna(55) #NaN이면 55로 대체
-exam['math'].insa().sum() #결측치 빈도 확인
+3. 결측치 대체
+exam.loc[[2, 7, 14], ['math']] = np.nan     # 특정 행에 NaN 할당 (loc 사용)
+exam['math'] = exam['math'].fillna(55)      # math 변수에서 NaN을 55로 대체
+exam['math'].isna().sum()                   # math 변수의 결측치 개수 확인
 
-#이상치 제거하기
-df['sex'].value_counts().sort_index() #빈도표로 이상치 확인
-df['score'].value_counts().sort_index()
+🚨 이상치 다루기
+1. 빈도표로 이상치 확인
+df['sex'].value_counts().sort_index()       # sex 변수 값의 분포 확인
+df['score'].value_counts().sort_index()     # score 변수 값의 분포 확인
 
-#결측 처리하기
-df['sex'] = np.where(df['sex'] == 3, np.nan, df['sex'])
-df['score'] = np.where(df['score'] > 5, np.nan, df['score'])
+2. 조건문으로 이상치 → 결측치 처리
+df['sex'] = np.where(df['sex'] == 3, np.nan, df['sex'])       # sex가 3이면 NaN 처리
+df['score'] = np.where(df['score'] > 5, np.nan, df['score'])  # score가 5 초과면 NaN 처리
 
-#분석
-df.dropna(subset = ['sex', 'score']) \ #df.dropna()는 결측치를 제거함
+📊 그룹별 분석 (결측치 제거 후)
+df.dropna(subset=['sex', 'score']) \
   .groupby('sex') \
-  .agg(mean_score = ('score', 'mean')) 
+  .agg(mean_score=('score', 'mean'))       # 성별 그룹별 평균 score 계산
 
-#이상치 제거하기
-1. 상자 그림 살펴보기
+📦 이상치 시각화 및 제거 (상자 그림 기반)
+1. 상자 그림으로 확인
 import seaborn as sns
-sns.boxplot(data=mpg, y='hwy')
+sns.boxplot(data=mpg, y='hwy')             # 'hwy' 변수의 이상치를 시각화
 
-2. 극단치 기준값 구하기
-pct25 = mpg['hwy'].quantile(.25) #1사분위수
-pct75 = mpg['hwy'].quantile(.75) #3사분위수
-iqr = pct75-pct25 
-pct25 - 1.5*iqr #하한
-pct75 + 1.5*iqr #상한
+2. IQR 기준값으로 극단치 범위 설정
+pct25 = mpg['hwy'].quantile(0.25)          # 1사분위수
+pct75 = mpg['hwy'].quantile(0.75)          # 3사분위수
+iqr = pct75 - pct25                        # IQR 계산
+lower = pct25 - 1.5 * iqr                  # 극단치 하한
+upper = pct75 + 1.5 * iqr                  # 극단치 상한
 
-3. 극단치를 결측 처리하기
-mpg['hwy'] = np.where((mpg['hwy'] < 4.5) | (mpg['hwy'] > 40.5), np.nan, mpg['hwy'])
-mpg['hwy'].isna().sum() #결측치 빈도 확인
+3. 극단치를 결측치로 처리
+mpg['hwy'] = np.where((mpg['hwy'] < lower) | (mpg['hwy'] > upper), np.nan, mpg['hwy'])
+mpg['hwy'].isna().sum()                    # 처리 후 결측치 개수 확인
 
-4. 결측치를 제거하고 분석하기
-mpg.dropna(subset = 'hwy') \
+4. 결측치 제거 후 분석
+mpg.dropna(subset='hwy') \
    .groupby('drv') \
-   .agg(mean_hwy = ('hwy', 'mean'))
+   .agg(mean_hwy=('hwy', 'mean'))         # 구동방식별 평균 고속도로 연비
