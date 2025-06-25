@@ -14,6 +14,16 @@ min(x)  # 최솟값
 터미널 또는 아나콘다 프롬프트에서 입력:
 pip install 패키지명
 
+- 패키지 사용 예시 (seaborn)
+import seaborn
+
+- 데이터 불러오기
+df = seaborn.load_dataset('titanic')
+
+- 그래프 그리기
+seaborn.countplot(x='sex', data=df)  # 성별 빈도 그래프
+seaborn.countplot(x='class', hue='alive', data=df)  # 생존 여부별 클래스
+
 4. 모듈 불러오는 방법
 # 방법 1
 import sklearn.metrics as met
