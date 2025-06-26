@@ -1,53 +1,53 @@
-📘 1. 데이터 파악을 위한 기본 명령어 (pandas)
+1. 데이터 파악을 위한 기본 명령어 (pandas)
 import pandas as pd
 
 exam = pd.read_csv('exam.csv')  # CSV 파일 불러오기
 
-✅ 기본적인 구조와 정보 확인
-| 명령어                            | 설명                     |
-| ------------------------------ | ---------------------- |
-| `exam.head()`                  | 상위 5개 행 출력 (미리보기)      |
-| `exam.tail()`                  | 하위 5개 행 출력             |
-| `exam.shape`                   | (행 수, 열 수) 튜플 반환       |
-| `exam.info()`                  | 변수명, 결측치, 자료형 등 정보 요약  |
-| `exam.describe()`              | 수치형 변수의 요약 통계량 출력      |
-| `exam.describe(include='all')` | 문자형 변수 포함 전체 요약 통계량 출력 |
+- 기본적인 구조와 정보 확인
+| 명령어                          | 설명                     
+| ------------------------------ | ---------------------- 
+| `exam.head()`                  | 상위 5개 행 출력 (미리보기)      
+| `exam.tail()`                  | 하위 5개 행 출력             
+| `exam.shape`                   | (행 수, 열 수) 튜플 반환       
+| `exam.info()`                  | 변수명, 결측치, 자료형 등 정보 요약  
+| `exam.describe()`              | 수치형 변수의 요약 통계량 출력      
+| `exam.describe(include='all')` | 문자형 변수 포함 전체 요약 통계량 출력 
 
-🔹 describe() 요약 항목:
+- describe() 요약 항목:
 수치형: count, mean, std, min, 25%, 50%, 75%, max
 문자형: count, unique, top, freq
 
-🧠 2. 함수의 종류
-| 분류     | 설명             | 예시                                                                 |
-| ------ | -------------- | ------------------------------------------------------------------ |
-| 내장 함수  | 파이썬 기본 제공      | `print()`, `len()`, `sum()`                                        |
-| 패키지 함수 | 모듈 import 후 사용 | `np.mean()`, `pd.read_csv()`                                       |
-| 메서드 함수 | 특정 자료형 전용 함수   | `df.head()`, `series.value_counts()` 등<br>(예: `head()`는 데이터프레임 전용) |
+2. 함수의 종류
+| 분류     | 설명             | 예시                                                                 
+| ------ | -------------- | ------------------------------------------------------------------ 
+| 내장 함수  | 파이썬 기본 제공      | `print()`, `len()`, `sum()`                                        
+| 패키지 함수 | 모듈 import 후 사용 | `np.mean()`, `pd.read_csv()`                                       
+| 메서드 함수 | 특정 자료형 전용 함수   | `df.head()`, `series.value_counts()` 등 (예: `head()`는 데이터프레임 전용) 
 
-📝 3. 데이터프레임 복사 및 변수명 변경
+3. 데이터프레임 복사 및 변수명 변경
 df_new = df_raw.copy()  # 원본 유지하면서 복사본 생성
 df_new.rename(columns={'var2': 'v2'}, inplace=True)  # 컬럼명 변경
 
-🛠️ 4. 파생변수 만들기 (새로운 열 추가)
+4. 파생변수 만들기 (새로운 열 추가)
 df['var_sum'] = df['var1'] + df['var2']  # 두 열을 더해서 새로운 열 생성
 
-📊 5. 데이터 요약 및 시각화
+5. 데이터 요약 및 시각화
 mpg['total'].mean()             # 평균
 mpg['total'].describe()         # 통계 요약
 mpg['total'].plot.hist()        # 히스토그램
 
-🔎 6. 조건문으로 파생변수 만들기
-✔ 단순 조건문: np.where()
+6. 조건문으로 파생변수 만들기
+- 단순 조건문: np.where()
 import numpy as np
 
 mpg['test'] = np.where(mpg['total'] >= 20, 'pass', 'fail')
 
-✔ 빈도표 및 시각화
+- 빈도표 및 시각화
 count_test = mpg['test'].value_counts()
 count_test.plot.bar()          # 기본 막대 그래프
 count_test.plot.bar(rot=0)     # x축 라벨을 수평으로
 
-🎯 7. 중첩 조건문 (np.where 여러 번 사용)
+7. 중첩 조건문 (np.where 여러 번 사용)
 mpg['grade'] = np.where(mpg['total'] >= 30, 'A',
                 np.where(mpg['total'] >= 20, 'B', 'C'))
 
